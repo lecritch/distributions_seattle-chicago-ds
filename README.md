@@ -7,20 +7,6 @@ Agenda:
 3. Identify descrete distributions: uniform, bernouli, binomial,   
 4. Identify continuous distributions: Normal, standard normal (z)   
 
-
-```python
-
-```
-
-
-```python
-from scipy import stats
-from matplotlib import pyplot as plt
-import seaborn as sns
-import numpy as np
-%matplotlib inline
-```
-
 Statistical distributions will be relevant throughout the bootcamp.  They will:
 
 1. Allow us to conduct statistical tests to judge the validity of our conclusions.  As a data scientist at your company, you may be asked to judge whether a certain change to the user interface of your website increases conversion rate. 
@@ -38,48 +24,6 @@ The distinction between descrete and continuous is very important to have in you
 
 
 ```python
-
-title_1 = "height_of_us_women in inches"
-title_2 = 'result of flipping a coin 100 times'
-title_3 = 'result of rolling a 20 sided dice 1000 times'
-title_4 = 'the length of time from today a computer part lasts'
-title_5 = 'probability that a picture is a chihauhua\n, a muffin, a bird, or a piece of pizza\n as would guess a neural network'
-title_6 = 'probability of rolling a value equal to or below\n a certain number on a 20 sided dice'
-no_title = 'no_title'
-
-fig, ax = plt.subplots(2,3, figsize=(15,10))
-
-sns.kdeplot(np.random.exponential(10, size=1000), ax=ax[0][0], color='purple')
-ax[0][0].set_xlim(0,80)
-ax[0][0].set_title(no_title)
-
-sns.barplot(['outcome_1', 'outcome_2', 'outcome_3', 'outcome_4'], [.4,.5,.08,.02], ax=ax[1][0], color='yellow')
-ax[1][0].tick_params(labelrotation=45)
-ax[1][0].set_title(no_title)
-
-sns.kdeplot(np.random.normal(64.5, 2.5, 1000), ax=ax[1][1])
-ax[1][1].set_title(no_title)
-
-sns.barplot(x=['outcome_1','outcome_2'], y=[sum(np.random.binomial(1,.5, 100)),100 - sum(np.random.binomial(1,.5, 100))], ax=ax[0][1], color='pink')
-ax[0][1].set_title(no_title)
-
-sns.barplot(x=list(range(1,21)), y=np.unique(np.random.randint(1,21,1000), return_counts=True)[1], ax=ax[0][2], color='teal')
-ax[0][2].tick_params(labelrotation=45)
-ax[0][2].set_title(no_title)
-
-sns.barplot(list(range(1,21)), np.cumsum([1/20 for number in range(1,21)]), ax=ax[1][2])
-ax[1][2].set_title(no_title)
-
-plt.tight_layout()
-```
-
-
-![png](index_files/index_7_0.png)
-
-
-
-```python
-#__SOLUTION__
 title_1 = "height_of_us_women in inches"
 title_2 = 'result of flipping a coin 100 times'
 title_3 = 'result of rolling a 20 sided dice 1000 times'
@@ -116,7 +60,7 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_8_0.png)
+![png](index_files/index_5_0.png)
 
 
 ## Discrete Distributions
@@ -133,24 +77,6 @@ The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at an
 
 We might then represent this function pictorially as follows:
 
-
-```python
-# Plot here!
-
-x = range(1, 5)
-lotto_dict = {1: 0.5, 2: 0.25, 3: 0.15, 4:.1}
-y = [lotto_dict[num] for num in x]
-
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-ax.plot(x, y, 'bo', ms=8, label='lotto pmf')
-ax.vlines(x, 0, y, 'r', lw=5)
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_13_0.png)
-
-
 The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. 
 
 For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
@@ -160,57 +86,11 @@ In order to create the CDF, we:
 - for each value, count the number of values that are less than or equal to the current value
 - divide that count by the total number of values
 
-
-```python
-# align the values
-lotto_dict = {1:50, 2:25, 3:15, 4:10}
-values = list(lotto_dict.keys())
-# count the number of values that are less than or equal to the current value
-count_less_than_equal = np.cumsum(list(lotto_dict.values()))
-# divide by total number of values
-prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values()) 
-```
-
-
-```python
-fig, ax = plt.subplots()
-ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
-ax.vlines(values, 0, prob_less_than_or_equal, 'r', lw=5)
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_16_0.png)
-
-
-
-```python
-rolls = range(1,13)
-# Equal roll probability for a fair die
-roll_probs = np.full((1,12), 1/12).flatten()
-fig, ax = plt.subplots()
-ax.plot(rolls, roll_probs, 'bo', ms=8, label='rolls of a die')
-ax.vlines(rolls, 0, roll_probs, 'r', lw=5)
-# ax.legend(loc='best')
-plt.title('Uniform distribution:\n Roll of fair 12-sided die')
-plt.tight_layout();
-```
-
-
-![png](index_files/index_17_0.png)
-
-
 # Pair Program
 Taking what we know about cumulative distribution functions, create a plot of the CDF of a fair 12-sided die.
 
 
 ```python
-# Your code here
-```
-
-
-```python
-#__SOLUTION__
 fig, ax = plt.subplots()
 rolls = list(range(1,13))
 cumu_probs = np.cumsum([1/12 for number in range(1,13)])
@@ -226,7 +106,7 @@ ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
 
 
 
-![png](index_files/index_20_1.png)
+![png](index_files/index_12_1.png)
 
 
 # Bernouli
@@ -241,34 +121,6 @@ Take for example penalty kicks in soccer. Assuming the probability of scoring a 
 
 ![panenka](https://media.giphy.com/media/Jy1R6jdp8uXok/giphy.gif)
 
-
-```python
-
-```
-
-
-```python
-# probability of scoring
-p = .75
-# probability of missing
-q = 1 -.75
-
-fig, ax = plt.subplots()
-ax.bar(['miss', 'score'],[q,p], color=['red','green'])
-ax.set_title('Bernouli Distribution of Penalty Kicks')
-```
-
-
-
-
-    Text(0.5, 1.0, 'Bernouli Distribution of Penalty Kicks')
-
-
-
-
-![png](index_files/index_26_1.png)
-
-
 The uniform distribution describes a set of equal probabilities across all outcomes.  
 
 The pmf of a discrete uniform distribution is simply:
@@ -279,7 +131,6 @@ For the roll of a fair 12 sided die, the pmf is created like so:
 
 
 ```python
-#__SOLUTION__
 n = 10
 k = 7
 p = .75
@@ -292,20 +143,6 @@ n_choose_k * p**(k)*(1-p)**(n-k)
 
 
     0.25028228759765625
-
-
-
-
-```python
-# Let's check that with some built in methods
-stats.binom.pmf(7, 10, 0.75)
-
-```
-
-
-
-
-    0.2502822875976565
 
 
 
@@ -348,26 +185,11 @@ std = sqrt(1.875) = 1.369
 
 
 
-
-```python
-# Again, check with builtins
-mean, var = stats.binom.stats(n, p, moments='mv')
-print(f"mean: {mean}, var: {var}, std: {np.sqrt(var)}")
-```
-
-    mean: 7.5, var: 1.875, std: 1.3693063937629153
-
-
 # Code along
 What is the probability of a team scoring 7 goals in a shootout?
 
 
 
-
-
-```python
-# Code here
-```
 
 ### Binomial
 
@@ -380,24 +202,6 @@ The binomial distribution can tell me what the probability is that the shootout 
 $\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
 
 Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
-
-
-```python
-n = 10
-p = 0.75
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-x = np.arange(stats.binom.ppf(0.01, n, p),
-              stats.binom.ppf(0.99, n, p))
-
-ax.plot(x, stats.binom.pmf(x, n, p), 'bo', ms=8, label='binom pmf')
-ax.vlines(x, 0, stats.binom.pmf(x, n, p), 'r', linewidth=5,
-          label='pmf')
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_37_0.png)
-
 
 # Continuous Distributions
 
@@ -436,26 +240,6 @@ Since a continuous random variable can take any of an _infinite_ number of value
 
 You can get Euler's number $e$ from `numpy.e` or (the method) `numpy.exp()`.
 
-
-```python
-fig, ax = plt.subplots(figsize=(10,10))
-uniform = sorted(np.random.uniform(5,15, 1000))
-probs = [stats.norm(10).pdf(num) for num in uniform]
-plt.plot(uniform, probs)
-
-```
-
-
-
-
-    [<matplotlib.lines.Line2D at 0x1a2c8779e8>]
-
-
-
-
-![png](index_files/index_44_1.png)
-
-
 The $\bf{cumulative\ distribution\ function\ (cdf)}$ gives, at any value $x$, the probability that a continuous variable take a value that is _less than or equal to $x$_.
 
 The cdf will therefore be, for any distribution, a monotonically increasing (or, strictly, nondecreasing) function. That is, $cdf(x_2) \geq cdf(x_1)$ if $x_2 \geq x_1$.
@@ -472,47 +256,6 @@ where $p(x)$ is the probability density function associated with the distributio
 
 When working in numpy, the mean is represented by the `loc` parameter, and specifies the center of the distribution on the x-axis
 
-
-```python
-fig, ax = plt.subplots()
-sns.kdeplot(np.random.normal(loc = 0, size =1000), ax = ax, shade='blue')
-sns.kdeplot(np.random.normal(loc = 3, size =1000), ax = ax, shade='red')
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2d2d3e10>
-
-
-
-
-![png](index_files/index_48_1.png)
-
-
-
-```python
-uniform_10 = sorted(np.random.uniform(5, 15, 2000))
-probs_10 = [stats.norm(10).pdf(num) for num in uniform_10]
-
-uniform_0 = sorted(np.random.uniform(-5, 5, 2000))
-probs_0 = [stats.norm(0).pdf(num) for num in uniform_0]
-
-plt.plot(uniform_10,probs_10)
-plt.plot(uniform_0, probs_0)
-```
-
-
-
-
-    [<matplotlib.lines.Line2D at 0x1a2c6b8b38>]
-
-
-
-
-![png](index_files/index_49_1.png)
-
-
 ## Spread/Variance/std
 
 std = $\Large\sigma = \sqrt{\int_X(x - \mu)^2p(x)dx}$, <br/> where again $p(x)$ is the probability density function of X.
@@ -522,40 +265,10 @@ std = $\Large\sigma = \sqrt{\int_X(x - \mu)^2p(x)dx}$, <br/> where again $p(x)$ 
 In numpy, we designate the standard deviation with the `scale` parameter. Alter the parameter below.  Larger numbers make the distribution wider, smaller numbers make it skinnier.
 
 
-
-```python
-fig, ax = plt.subplots()
-sns.kdeplot(np.random.normal(loc = 0, scale=2.0, size =1000), ax = ax, shade='blue')
-sns.kdeplot(np.random.normal(loc = 3, scale=1.0,  size =1000), ax = ax, shade='red')
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2d48b4a8>
-
-
-
-
-![png](index_files/index_53_1.png)
-
-
 ## Skew 
 
 We will touch briefly on the third and fourth moments for the normal curve. Skew is a measure of assymemtry.  A skew of zero is perfectly symetrical about the mean.   
 ![skew](img/skew.png)
-
-
-
-```python
-fig, ax = plt.subplots()
-normal_sample = np.random.normal(0,1, 1000)
-sns.kdeplot(normal_sample, ax = ax)
-ax.set_title(f'Slight <fill in> skew:\n {stats.skew(normal_sample)}');
-```
-
-
-![png](index_files/index_55_0.png)
 
 
 ### Transforming  Left/Negatively Skewed Data
@@ -607,8 +320,3 @@ A Z distribution may be described as N(0,1).
 ## Empirical Rule
 
 ![empirical_rule](img/empirical_rule.png)
-
-
-```python
-
-```
