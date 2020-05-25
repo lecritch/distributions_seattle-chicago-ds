@@ -77,48 +77,6 @@ plt.tight_layout()
 ![png](index_files/index_7_0.png)
 
 
-
-```python
-#__SOLUTION__
-title_1 = "height_of_us_women in inches"
-title_2 = 'result of flipping a coin 100 times'
-title_3 = 'result of rolling a 20 sided dice 1000 times'
-title_4 = 'the length of time from today a computer part lasts'
-title_5 = 'probability that a picture is a chihauhua\n, a muffin, a bird, or a piece of pizza\n as would guess a neural network'
-title_6 = 'probability of rolling a value equal to or below\n a certain number on a 20 sided dice'
-no_title = 'no_title'
-
-fig, ax = plt.subplots(2,3, figsize=(15,10))
-
-sns.kdeplot(np.random.exponential(10, size=1000), ax=ax[0][0], color='blue')
-ax[0][0].set_xlim(0,80)
-ax[0][0].set_title(title_4)
-
-sns.barplot(['outcome_1', 'outcome_2', 'outcome_3', 'outcome_4'], [.4,.5,.08,.02], ax=ax[1][0], color='orange')
-ax[1][0].tick_params(labelrotation=45)
-ax[1][0].set_title(title_5)
-
-sns.kdeplot(np.random.normal(64.5, 2.5, 1000), ax=ax[1][1], color='blue')
-ax[1][1].set_title(title_1)
-
-sns.barplot(x=['outcome_1','outcome_2'], y=[sum(np.random.binomial(1,.5, 100)),100 - sum(np.random.binomial(1,.5, 100))], ax=ax[0][1], color='orange')
-ax[0][1].set_title(title_2)
-
-sns.barplot(x=list(range(1,21)), y=np.unique(np.random.randint(1,21,1000), return_counts=True)[1], ax=ax[0][2], color='orange')
-ax[0][2].tick_params(labelrotation=45)
-ax[0][2].set_title(title_3)
-
-sns.barplot(list(range(1,21)), np.cumsum([1/20 for number in range(1,21)]), ax=ax[1][2], color='orange')
-ax[1][2].set_title(title_6)
-
-plt.tight_layout()
-
-```
-
-
-![png](index_files/index_8_0.png)
-
-
 ## Discrete Distributions
 
 Now that we have made the distinction between discrete and continuous clear, let's dive deeper into each category. 
@@ -148,7 +106,7 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_13_0.png)
+![png](index_files/index_12_0.png)
 
 
 The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. 
@@ -180,7 +138,7 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_16_0.png)
+![png](index_files/index_15_0.png)
 
 
 
@@ -197,7 +155,7 @@ plt.tight_layout();
 ```
 
 
-![png](index_files/index_17_0.png)
+![png](index_files/index_16_0.png)
 
 
 # Pair Program
@@ -207,27 +165,6 @@ Taking what we know about cumulative distribution functions, create a plot of th
 ```python
 # Your code here
 ```
-
-
-```python
-#__SOLUTION__
-fig, ax = plt.subplots()
-rolls = list(range(1,13))
-cumu_probs = np.cumsum([1/12 for number in range(1,13)])
-ax.plot(rolls, cumu_probs, 'bo', color='blue')
-ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
-```
-
-
-
-
-    <matplotlib.collections.LineCollection at 0x1a2ce43fd0>
-
-
-
-
-![png](index_files/index_20_1.png)
-
 
 # Bernouli
 
@@ -266,7 +203,7 @@ ax.set_title('Bernouli Distribution of Penalty Kicks')
 
 
 
-![png](index_files/index_26_1.png)
+![png](index_files/index_24_1.png)
 
 
 The uniform distribution describes a set of equal probabilities across all outcomes.  
@@ -276,24 +213,6 @@ The pmf of a discrete uniform distribution is simply:
 $ f(x)=\frac{1}{n} $
 
 For the roll of a fair 12 sided die, the pmf is created like so:
-
-
-```python
-#__SOLUTION__
-n = 10
-k = 7
-p = .75
-
-n_choose_k = (np.math.factorial(n))/(np.math.factorial(k)* np.math.factorial(n-k))
-n_choose_k * p**(k)*(1-p)**(n-k)
-```
-
-
-
-
-    0.25028228759765625
-
-
 
 
 ```python
@@ -396,7 +315,7 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_37_0.png)
+![png](index_files/index_34_0.png)
 
 
 # Continuous Distributions
@@ -453,7 +372,7 @@ plt.plot(uniform, probs)
 
 
 
-![png](index_files/index_44_1.png)
+![png](index_files/index_41_1.png)
 
 
 The $\bf{cumulative\ distribution\ function\ (cdf)}$ gives, at any value $x$, the probability that a continuous variable take a value that is _less than or equal to $x$_.
@@ -487,7 +406,7 @@ sns.kdeplot(np.random.normal(loc = 3, size =1000), ax = ax, shade='red')
 
 
 
-![png](index_files/index_48_1.png)
+![png](index_files/index_45_1.png)
 
 
 
@@ -510,7 +429,7 @@ plt.plot(uniform_0, probs_0)
 
 
 
-![png](index_files/index_49_1.png)
+![png](index_files/index_46_1.png)
 
 
 ## Spread/Variance/std
@@ -537,7 +456,7 @@ sns.kdeplot(np.random.normal(loc = 3, scale=1.0,  size =1000), ax = ax, shade='r
 
 
 
-![png](index_files/index_53_1.png)
+![png](index_files/index_50_1.png)
 
 
 ## Skew 
@@ -555,7 +474,7 @@ ax.set_title(f'Slight <fill in> skew:\n {stats.skew(normal_sample)}');
 ```
 
 
-![png](index_files/index_55_0.png)
+![png](index_files/index_52_0.png)
 
 
 ### Transforming  Left/Negatively Skewed Data
