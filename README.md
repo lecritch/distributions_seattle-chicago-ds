@@ -9,15 +9,27 @@ Agenda:
 
 Statistical distributions will be relevant throughout the bootcamp.  They will:
 
-1. Allow us to conduct statistical tests to judge the validity of our conclusions.  As a data scientist at your company, you may be asked to judge whether a certain change to the user interface of your website increases conversion rate. 
+1. Allow us to conduct statistical tests to judge the validity of conclusions during hypothesis testing. 
 2. Provide the foundation for specific assumptions of linear regression.
 3. Appear in the cost functions tied to logistic regression and other models.
 4. Drive the classification decisions made in parametric models, such as Naive-Bayes. 
 
-# 1. Discrete vs. Continuous 
-A fundamental distinction among kinds of distributions is the distinction between discrete and continuous . A discrete distribution (or variable) takes on countable values, like integers, while a continuous distribution takes on a continuum of values, like real numbers.
+# 1. Discrete vs. Continuous Variables
+A fundamental distinction among kinds of distributions is the distinction between discrete and continuous variables. A distribution of a discrete variable takes on countable values, like integers. Examples would be 
 
-The distinction between descrete and continuous is very important to have in your mind. The distinction can easily be seen in plots. Given that quick introduction, we have a quick exercise. There are two tasks.  
+- the number of times a coin lands on heads 
+- the number of customers arriving in a store in an hour 
+- the number of runs scored in a baseball game.  
+
+A continuous distribution, on the other hands takes on a continuum of values, like real numbers. Think measurements, like:
+
+- The weight of a newborn baby
+- The time it takes for a train to arrive at a station
+- The brightness of a planet
+
+The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
+
+Let's do a quick exercise. There are two tasks.  
 
 1. First, simply change the color of the plots representing descrete data to orange and the plots represent continous data to blue.
 2. Attach the titles to the distributions you think reflect the data set described.
@@ -67,7 +79,7 @@ plt.tight_layout()
 
 Now that we have made the distinction between discrete and continuous clear, let's dive deeper into each category. 
 
-### Probability Mass Function
+### Probability Mass Function (PMF)
 
 The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at any value $k$, the probability that the random variable takes the value $k$. Suppose, for example, that I have a jar full of lottery balls containing:
 - 50 "1"s,
@@ -77,7 +89,21 @@ The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at an
 
 We might then represent this function pictorially as follows:
 
-The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. 
+## Uniform Distribution
+
+The uniform distribution describes a set of probabilities which are all equally likely.
+
+A common example is the roll of a die.  
+
+![dice](https://media.giphy.com/media/3ohhwLh5dw0i7iLzOg/giphy.gif)
+
+Let's take the example of a twelve-sided die, and plot the PMF.  
+
+The probability for rolling any number, is 1/12.
+
+### Cumulative Distribution Function (CDF)
+
+The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. It can apply to both discrete or continuous functions.
 
 For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
 
@@ -92,21 +118,20 @@ Taking what we know about cumulative distribution functions, create a plot of th
 
 ```python
 fig, ax = plt.subplots()
-rolls = list(range(1,13))
+rolls = list(range(0,13))
 cumu_probs = np.cumsum([1/12 for number in range(1,13)])
+
+cumu_probs = np.insert(cumu_probs,0,0,axis=0)
 ax.plot(rolls, cumu_probs, 'bo', color='blue')
-ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
+# ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
+for i in range(0,13):
+    ax.hlines(cumu_probs[i], i,i+1, 'r', lw=5,)
+for i in range(0,12):
+    ax.vlines(i+1, cumu_probs[i+1],cumu_probs[i],  linestyles='dotted')
 ```
 
 
-
-
-    <matplotlib.collections.LineCollection at 0x1a2ce43fd0>
-
-
-
-
-![png](index_files/index_12_1.png)
+![png](index_files/index_16_0.png)
 
 
 # Bernouli
@@ -145,6 +170,18 @@ n_choose_k * p**(k)*(1-p)**(n-k)
     0.25028228759765625
 
 
+
+## Binomial
+
+The binomial distribution results from running multiple Bernouli trials.  The binomial describes the probability of a certain number of successes occuring in the specified number of trials. 
+
+Let's resume our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
+
+The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
+
+$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
+
+Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
 
 ## Center, Spread and Shape
 Statistical distributions can be discribed in terms of moments. Each moment describes a different aspect of a distributions shape.  For the binomial distribution, we will look at the first two moments: expected value and the variance.
@@ -190,18 +227,6 @@ What is the probability of a team scoring 7 goals in a shootout?
 
 
 
-
-### Binomial
-
-The binomial distribution results from running multiple Bernouli trials.  The binomial describes the probability of a certain number of successes occuring in the specified number of trials. 
-
-Let's resume our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
-
-The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
-
-$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
-
-Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
 
 # Continuous Distributions
 
