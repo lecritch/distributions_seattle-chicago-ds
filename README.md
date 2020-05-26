@@ -9,11 +9,6 @@ Agenda:
 
 
 ```python
-
-```
-
-
-```python
 from scipy import stats
 from matplotlib import pyplot as plt
 import seaborn as sns
@@ -23,15 +18,27 @@ import numpy as np
 
 Statistical distributions will be relevant throughout the bootcamp.  They will:
 
-1. Allow us to conduct statistical tests to judge the validity of our conclusions.  As a data scientist at your company, you may be asked to judge whether a certain change to the user interface of your website increases conversion rate. 
+1. Allow us to conduct statistical tests to judge the validity of conclusions during hypothesis testing. 
 2. Provide the foundation for specific assumptions of linear regression.
 3. Appear in the cost functions tied to logistic regression and other models.
 4. Drive the classification decisions made in parametric models, such as Naive-Bayes. 
 
-# 1. Discrete vs. Continuous 
-A fundamental distinction among kinds of distributions is the distinction between discrete and continuous . A discrete distribution (or variable) takes on countable values, like integers, while a continuous distribution takes on a continuum of values, like real numbers.
+# 1. Discrete vs. Continuous Variables
+A fundamental distinction among kinds of distributions is the distinction between discrete and continuous variables. A distribution of a discrete variable takes on countable values, like integers. Examples would be 
 
-The distinction between descrete and continuous is very important to have in your mind. The distinction can easily be seen in plots. Given that quick introduction, we have a quick exercise. There are two tasks.  
+- the number of times a coin lands on heads 
+- the number of customers arriving in a store in an hour 
+- the number of runs scored in a baseball game.  
+
+A continuous distribution, on the other hands takes on a continuum of values, like real numbers. Think measurements, like:
+
+- The weight of a newborn baby
+- The time it takes for a train to arrive at a station
+- The brightness of a planet
+
+The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
+
+Let's do a quick exercise. There are two tasks.  
 
 1. First, simply change the color of the plots representing descrete data to orange and the plots represent continous data to blue.
 2. Attach the titles to the distributions you think reflect the data set described.
@@ -74,7 +81,7 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_7_0.png)
+![png](index_files/index_6_0.png)
 
 
 
@@ -116,14 +123,14 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_8_0.png)
+![png](index_files/index_7_0.png)
 
 
 ## Discrete Distributions
 
 Now that we have made the distinction between discrete and continuous clear, let's dive deeper into each category. 
 
-### Probability Mass Function
+### Probability Mass Function (PMF)
 
 The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at any value $k$, the probability that the random variable takes the value $k$. Suppose, for example, that I have a jar full of lottery balls containing:
 - 50 "1"s,
@@ -148,40 +155,20 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_13_0.png)
+![png](index_files/index_12_0.png)
 
 
-The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. 
+## Uniform Distribution
 
-For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
+The uniform distribution describes a set of probabilities which are all equally likely.
 
-In order to create the CDF, we:
-- align the values from least to greatest
-- for each value, count the number of values that are less than or equal to the current value
-- divide that count by the total number of values
+A common example is the roll of a die.  
 
+![dice](https://media.giphy.com/media/3ohhwLh5dw0i7iLzOg/giphy.gif)
 
-```python
-# align the values
-lotto_dict = {1:50, 2:25, 3:15, 4:10}
-values = list(lotto_dict.keys())
-# count the number of values that are less than or equal to the current value
-count_less_than_equal = np.cumsum(list(lotto_dict.values()))
-# divide by total number of values
-prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values()) 
-```
+Let's take the example of a twelve-sided die, and plot the PMF.  
 
-
-```python
-fig, ax = plt.subplots()
-ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
-ax.vlines(values, 0, prob_less_than_or_equal, 'r', lw=5)
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_16_0.png)
-
+The probability for rolling any number, is 1/12.
 
 
 ```python
@@ -197,7 +184,53 @@ plt.tight_layout();
 ```
 
 
-![png](index_files/index_17_0.png)
+![png](index_files/index_16_0.png)
+
+
+### Cumulative Distribution Function (CDF)
+
+The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. It can apply to both discrete or continuous functions.
+
+For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
+
+In order to create the CDF, we:
+- align the values from least to greatest
+- for each value, count the number of values that are less than or equal to the current value
+- divide that count by the total number of values
+
+
+```python
+# align the values
+lotto_dict = {0:0, 1:50, 2:25, 3:15, 4:10}
+values = list(lotto_dict.keys())
+# count the number of values that are less than or equal to the current value
+count_less_than_equal = np.cumsum(list(lotto_dict.values()))
+# divide by total number of values
+prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values()) 
+values
+```
+
+
+
+
+    [0, 1, 2, 3, 4]
+
+
+
+
+```python
+fig, ax = plt.subplots()
+ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
+for i in range(0,5):
+    ax.hlines(prob_less_than_or_equal[i], i,i+1, 'r', lw=5,)
+for i in range(0,4):
+    ax.vlines(i+1, prob_less_than_or_equal[i+1],prob_less_than_or_equal[i],  linestyles='dotted')
+ax.legend(loc='best' )
+ax.set_ylim(0);
+```
+
+
+![png](index_files/index_20_0.png)
 
 
 # Pair Program
@@ -212,21 +245,34 @@ Taking what we know about cumulative distribution functions, create a plot of th
 ```python
 #__SOLUTION__
 fig, ax = plt.subplots()
-rolls = list(range(1,13))
+rolls = list(range(0,13))
 cumu_probs = np.cumsum([1/12 for number in range(1,13)])
+
+cumu_probs = np.insert(cumu_probs,0,0,axis=0)
 ax.plot(rolls, cumu_probs, 'bo', color='blue')
-ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
+# ax.vlines(rolls, 0, cumu_probs, 'r', lw=5)
+for i in range(0,13):
+    ax.hlines(cumu_probs[i], i,i+1, 'r', lw=5,)
+for i in range(0,12):
+    ax.vlines(i+1, cumu_probs[i+1],cumu_probs[i],  linestyles='dotted')
+```
+
+
+![png](index_files/index_23_0.png)
+
+
+
+```python
+np.insert(cumu_probs,0,0,axis=0)
 ```
 
 
 
 
-    <matplotlib.collections.LineCollection at 0x1a2ce43fd0>
+    array([0.        , 0.        , 0.08333333, 0.16666667, 0.25      ,
+           0.33333333, 0.41666667, 0.5       , 0.58333333, 0.66666667,
+           0.75      , 0.83333333, 0.91666667, 1.        ])
 
-
-
-
-![png](index_files/index_20_1.png)
 
 
 # Bernouli
@@ -240,11 +286,6 @@ Take for example penalty kicks in soccer. Assuming the probability of scoring a 
 
 
 ![panenka](https://media.giphy.com/media/Jy1R6jdp8uXok/giphy.gif)
-
-
-```python
-
-```
 
 
 ```python
@@ -266,7 +307,7 @@ ax.set_title('Bernouli Distribution of Penalty Kicks')
 
 
 
-![png](index_files/index_26_1.png)
+![png](index_files/index_29_1.png)
 
 
 The uniform distribution describes a set of equal probabilities across all outcomes.  
@@ -307,6 +348,36 @@ stats.binom.pmf(7, 10, 0.75)
 
     0.2502822875976565
 
+
+
+## Binomial
+
+The binomial distribution results from running multiple Bernouli trials.  The binomial describes the probability of a certain number of successes occuring in the specified number of trials. 
+
+Let's resume our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
+
+The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
+
+$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
+
+Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
+
+
+```python
+n = 10
+p = 0.75
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+x = np.arange(stats.binom.ppf(0.01, n, p),
+              stats.binom.ppf(0.99, n, p))
+
+ax.plot(x, stats.binom.pmf(x, n, p), 'bo', ms=8, label='binom pmf')
+ax.vlines(x, 0, stats.binom.pmf(x, n, p), 'r', linewidth=5,
+          label='pmf')
+ax.legend(loc='best');
+```
+
+
+![png](index_files/index_34_0.png)
 
 
 ## Center, Spread and Shape
@@ -369,36 +440,6 @@ What is the probability of a team scoring 7 goals in a shootout?
 # Code here
 ```
 
-### Binomial
-
-The binomial distribution results from running multiple Bernouli trials.  The binomial describes the probability of a certain number of successes occuring in the specified number of trials. 
-
-Let's resume our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
-
-The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
-
-$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
-
-Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
-
-
-```python
-n = 10
-p = 0.75
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-x = np.arange(stats.binom.ppf(0.01, n, p),
-              stats.binom.ppf(0.99, n, p))
-
-ax.plot(x, stats.binom.pmf(x, n, p), 'bo', ms=8, label='binom pmf')
-ax.vlines(x, 0, stats.binom.pmf(x, n, p), 'r', linewidth=5,
-          label='pmf')
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_37_0.png)
-
-
 # Continuous Distributions
 
 As we alluded to earlier, a continuous function represents an infinite number of possible values within a range. One way to think about it is that continuous variables are obtained by measuring, while discrete are obtained by counting.  
@@ -448,12 +489,12 @@ plt.plot(uniform, probs)
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a2c8779e8>]
+    [<matplotlib.lines.Line2D at 0x1a29395160>]
 
 
 
 
-![png](index_files/index_44_1.png)
+![png](index_files/index_47_1.png)
 
 
 The $\bf{cumulative\ distribution\ function\ (cdf)}$ gives, at any value $x$, the probability that a continuous variable take a value that is _less than or equal to $x$_.
@@ -461,6 +502,26 @@ The $\bf{cumulative\ distribution\ function\ (cdf)}$ gives, at any value $x$, th
 The cdf will therefore be, for any distribution, a monotonically increasing (or, strictly, nondecreasing) function. That is, $cdf(x_2) \geq cdf(x_1)$ if $x_2 \geq x_1$.
 
 [Here's](http://www.mas.ncl.ac.uk/~nmf16/teaching/mar1002/lect07.pdf) a helpful document on continuous random variables.
+
+
+```python
+fig, ax = plt.subplots(figsize=(10,10))
+uniform = sorted(np.random.uniform(5,15, 1000))
+probs = [stats.norm(10, 1).cdf(num) for num in uniform]
+ax.plot(uniform, probs)
+ax.set_title("CDF of Normal Distribution")
+```
+
+
+
+
+    Text(0.5, 1.0, 'CDF of Normal Distribution')
+
+
+
+
+![png](index_files/index_49_1.png)
+
 
 ## Center/Mean/Expected Value
 
@@ -482,12 +543,12 @@ sns.kdeplot(np.random.normal(loc = 3, size =1000), ax = ax, shade='red')
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2d2d3e10>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a294bd9b0>
 
 
 
 
-![png](index_files/index_48_1.png)
+![png](index_files/index_52_1.png)
 
 
 
@@ -505,12 +566,12 @@ plt.plot(uniform_0, probs_0)
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a2c6b8b38>]
+    [<matplotlib.lines.Line2D at 0x1a29483978>]
 
 
 
 
-![png](index_files/index_49_1.png)
+![png](index_files/index_53_1.png)
 
 
 ## Spread/Variance/std
@@ -537,7 +598,7 @@ sns.kdeplot(np.random.normal(loc = 3, scale=1.0,  size =1000), ax = ax, shade='r
 
 
 
-![png](index_files/index_53_1.png)
+![png](index_files/index_57_1.png)
 
 
 ## Skew 
@@ -555,7 +616,7 @@ ax.set_title(f'Slight <fill in> skew:\n {stats.skew(normal_sample)}');
 ```
 
 
-![png](index_files/index_55_0.png)
+![png](index_files/index_59_0.png)
 
 
 ### Transforming  Left/Negatively Skewed Data
@@ -607,8 +668,3 @@ A Z distribution may be described as N(0,1).
 ## Empirical Rule
 
 ![empirical_rule](img/empirical_rule.png)
-
-
-```python
-
-```
