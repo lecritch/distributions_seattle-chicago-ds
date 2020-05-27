@@ -1,11 +1,59 @@
 
-# On Statistical Distributions
+# Statistical Distributions
 
-Agenda:  
-1. Distinguish between discrete and continuous variables   
-2. Describe and create PMF's and CDF's   
-3. Identify descrete distributions: uniform, bernouli, binomial,   
-4. Identify continuous distributions: Normal, standard normal (z)   
+![](images/distributions.png)
+
+# Order of Business:
+    
+>    1. Describe the difference between discrete vs continuous variables
+>    2. Describe the difference between PMFs, PDFs, CDFs
+>    3. Introduce the bernouli and binomial distributions
+>    4. Introduce the normal distribution and empirical rule
+
+## What is a statistical distribution?
+
+- A statistical distribution is a representation of the frequencies of potential events or the percentage of time each event occurs.
+
+
+
+# 1. Discrete vs Continuous
+
+
+What is the difference between a continuous and a discrete distribution?
+
+## Discrete
+>  With discrete distributions, the values can only take a finite set of values.  Take, for example, a roll of a single die. 
+
+![](images/uniform.png)
+
+> - There are 6 possible outcomes of the roll.  In other words, 4.5 cannot be an outcome. As you see on the PMF plot, the bars which represent probability do not touch, suggesting non-integer numbers between 1 and 6 are not possible results.
+
+#### Examples of discrete distributions:
+
+> 1. The Bernoulli Distribution: - represents the probability of success for a certain experiment (binary outcome).
+> 2. The Poisson Distribution:- represents the probability of 𝑛 events in a given time period when the overall rate of occurrence is constant.
+> 3. The Uniform Distribution:- occurs when all possible outcomes are equally likely.
+
+## Continuous
+
+With a continous distribution, the set of possible results is an infinite set of values within a range. One way to think about continuous variables are variables that have been measured.  Measurement can always be more precise.
+
+> - A common example is height.  Although we think of height often in values such as 5 feet 7 inches, the exact height of a person can be any value within the range of possible heights.  In other words, a person could be 5 foot 7.000001 inches tall. 
+> - Another example is temperature, as shown below:
+
+![](images/pdf.png)
+
+#### Examples of continuous distributions
+> 1. The Normal or Gaussian distribution.
+> 2. Exponential
+> 3. Continuous uniform
+
+The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
+
+Let's do a quick exercise. There are two tasks.  
+
+1. First, simply change the color of the plots representing descrete data to orange and the plots represent continous data to blue.
+2. Attach the titles to the distributions you think reflect the data set described.
 
 
 ```python
@@ -15,33 +63,6 @@ import seaborn as sns
 import numpy as np
 %matplotlib inline
 ```
-
-Statistical distributions will be relevant throughout the bootcamp.  They will:
-
-1. Allow us to conduct statistical tests to judge the validity of conclusions during hypothesis testing. 
-2. Provide the foundation for specific assumptions of linear regression.
-3. Appear in the cost functions tied to logistic regression and other models.
-4. Drive the classification decisions made in parametric models, such as Naive-Bayes. 
-
-# 1. Discrete vs. Continuous Variables
-A fundamental distinction among kinds of distributions is the distinction between discrete and continuous variables. A distribution of a discrete variable takes on countable values, like integers. Examples would be 
-
-- the number of times a coin lands on heads 
-- the number of customers arriving in a store in an hour 
-- the number of runs scored in a baseball game.  
-
-A continuous distribution, on the other hands takes on a continuum of values, like real numbers. Think measurements, like:
-
-- The weight of a newborn baby
-- The time it takes for a train to arrive at a station
-- The brightness of a planet
-
-The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
-
-Let's do a quick exercise. There are two tasks.  
-
-1. First, simply change the color of the plots representing descrete data to orange and the plots represent continous data to blue.
-2. Attach the titles to the distributions you think reflect the data set described.
 
 
 ```python
@@ -81,14 +102,13 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_6_0.png)
+![png](index_files/index_14_0.png)
 
 
-## Discrete Distributions
+# 2. PMFs, PDFs, and CDFs, oh my!
 
-Now that we have made the distinction between discrete and continuous clear, let's dive deeper into each category. 
+## PMF: Probability Mass Function
 
-### Probability Mass Function (PMF)
 
 The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at any value $k$, the probability that the random variable takes the value $k$. Suppose, for example, that I have a jar full of lottery balls containing:
 - 50 "1"s,
@@ -96,7 +116,7 @@ The $\bf{probability\ mass\ function\ (pmf)}$ for a random variable gives, at an
 - 15 "3"s,
 - 10 "4"s
 
-We might then represent this function pictorially as follows:
+We then represent this function in a plot like so:
 
 
 ```python
@@ -113,213 +133,30 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_11_0.png)
+![png](index_files/index_18_0.png)
 
 
-## Uniform Distribution
+### Expected Value/Mean
 
-The uniform distribution describes a set of probabilities which are all equally likely.
-
-A common example is the roll of a die.  
-
-![dice](https://media.giphy.com/media/3ohhwLh5dw0i7iLzOg/giphy.gif)
-
-Let's take the example of a twelve-sided die, and plot the PMF.  
-
-The probability for rolling any number, is 1/12.
-
-
-```python
-rolls = range(1,13)
-# Equal roll probability for a fair die
-roll_probs = np.full((1,12), 1/12).flatten()
-fig, ax = plt.subplots()
-ax.plot(rolls, roll_probs, 'bo', ms=8, label='rolls of a die')
-ax.vlines(rolls, 0, roll_probs, 'r', lw=5)
-# ax.legend(loc='best')
-plt.title('Uniform distribution:\n Roll of fair 12-sided die')
-plt.tight_layout();
-```
-
-
-![png](index_files/index_15_0.png)
-
-
-### Cumulative Distribution Function (CDF)
-
-The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. It can apply to both discrete or continuous functions.
-
-For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
-
-In order to create the CDF, we:
-- align the values from least to greatest
-- for each value, count the number of values that are less than or equal to the current value
-- divide that count by the total number of values
-
-
-```python
-# align the values
-lotto_dict = {0:0, 1:50, 2:25, 3:15, 4:10}
-values = list(lotto_dict.keys())
-# count the number of values that are less than or equal to the current value
-count_less_than_equal = np.cumsum(list(lotto_dict.values()))
-# divide by total number of values
-prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values()) 
-values
-```
-
-
-
-
-    [0, 1, 2, 3, 4]
-
-
-
-
-```python
-fig, ax = plt.subplots()
-ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
-for i in range(0,5):
-    ax.hlines(prob_less_than_or_equal[i], i,i+1, 'r', lw=5,)
-for i in range(0,4):
-    ax.vlines(i+1, prob_less_than_or_equal[i+1],prob_less_than_or_equal[i],  linestyles='dotted')
-ax.legend(loc='best' )
-ax.set_ylim(0);
-```
-
-
-![png](index_files/index_19_0.png)
-
-
-# Pair Program
-Taking what we know about cumulative distribution functions, create a plot of the CDF of a fair 12-sided die.
-
-
-```python
-# Your code here
-```
-
-
-```python
-np.insert(cumu_probs,0,0,axis=0)
-```
-
-
-
-
-    array([0.        , 0.        , 0.08333333, 0.16666667, 0.25      ,
-           0.33333333, 0.41666667, 0.5       , 0.58333333, 0.66666667,
-           0.75      , 0.83333333, 0.91666667, 1.        ])
-
-
-
-# Bernouli
-
-The Bernouli distribution is the discrete distribution that describes a two-outcome trial, such as heads or tails.  The distribution is described by the probability of an one random variable of the value 1 associated with the probability p, and its correlary, the probability q, associated with 0  and taking the probability 1-p. 
-
-PMF: 
-${\displaystyle {\begin{cases}q=1-p&{\text{if }}k=0\\p&{\text{if }}k=1\end{cases}}}$
-
-Take for example penalty kicks in soccer. Assuming the probability of scoring a goal is .75, the Bernouli distribution is:
-
-
-![panenka](https://media.giphy.com/media/Jy1R6jdp8uXok/giphy.gif)
-
-
-```python
-# probability of scoring
-p = .75
-# probability of missing
-q = 1 -.75
-
-fig, ax = plt.subplots()
-ax.bar(['miss', 'score'],[q,p], color=['red','green'])
-ax.set_title('Bernouli Distribution of Penalty Kicks')
-```
-
-
-
-
-    Text(0.5, 1.0, 'Bernouli Distribution of Penalty Kicks')
-
-
-
-
-![png](index_files/index_27_1.png)
-
-
-The uniform distribution describes a set of equal probabilities across all outcomes.  
-
-The pmf of a discrete uniform distribution is simply:
-
-$ f(x)=\frac{1}{n} $
-
-For the roll of a fair 12 sided die, the pmf is created like so:
-
-
-```python
-# Let's check that with some built in methods
-stats.binom.pmf(7, 10, 0.75)
-
-```
-
-
-
-
-    0.2502822875976565
-
-
-
-## Binomial
-
-The binomial distribution results from running multiple Bernouli trials.  The binomial describes the probability of a certain number of successes occuring in the specified number of trials. 
-
-Let's resume our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
-
-The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
-
-$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
-
-Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
-
-
-```python
-n = 10
-p = 0.75
-fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-x = np.arange(stats.binom.ppf(0.01, n, p),
-              stats.binom.ppf(0.99, n, p))
-
-ax.plot(x, stats.binom.pmf(x, n, p), 'bo', ms=8, label='binom pmf')
-ax.vlines(x, 0, stats.binom.pmf(x, n, p), 'r', linewidth=5,
-          label='pmf')
-ax.legend(loc='best');
-```
-
-
-![png](index_files/index_31_0.png)
-
-
-## Center, Spread and Shape
-Statistical distributions can be discribed in terms of moments. Each moment describes a different aspect of a distributions shape.  For the binomial distribution, we will look at the first two moments: expected value and the variance.
-
-### Expected Value/Center
-
-The first moment describes the 'center' of the distribution. The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
+The expected value, or the mean, describes the 'center' of the distribution (ou may hear this called the first moment).  The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
 
 For a discrete distribution, working from the vantage point of a collected sample of n data points:
 
 mean = $\Large\mu = \frac{\Sigma^n_{i = 1}x_i}{n}$
 
-If we are working from the vantage point of known probabilities, the mean is referred to as the expected value. That is, what is the value we expect to see based on the given parameters, i.e. probability of success p and number of trials n. The expected value of the Binomial distribution is: 
+If we are working from the vantage point of known probabilities, the mean is referred to as the expected value. The expected value of a discrete distribution is the weighted sum of all values of x, where the weight is their probability.
  
-${\displaystyle \operatorname {E} [X]=np.}$
+The expected value of the Lotto example is:
+${\displaystyle \operatorname {E} [X]= \Sigma^n_{i=1}p(x_i)x_i}$
 
-For the shootout example, we expect to see 10*.75 = 7.5 goals on average.
- 
+
+```python
+# Calculate the expected value of the lotto example:
+
+```
 
 ### Variance/Standard Deviation
-Variance describes the spread of the data.  The 'spread' refers loosely to how far away the more extreme values are from the center.
+Variance describes the spread of the data (it is also referred to as the second moment).  The 'spread' refers loosely to how far away the more extreme values are from the center.
 
 Standard deviation is the square root of variance, effectively measures the *average distance away from the mean*.
 
@@ -327,219 +164,208 @@ From the standpoint of a sample, the variance of a discrete distribution of n da
 
 std = $\Large\sigma = \sqrt{\frac{\Sigma^n_{i = 1}(x_i - \mu)^2}{n}}$
 
-Given the parameters of our biniomial distribution, the variance is described by:
 
-${\displaystyle \operatorname {Var} (X)=np(1-p).}$
+Variance is the expectation of the squared deviation of a random variable from its mean.
 
-For the shootout, the variance is equal to 10*.75 * (1-.75) = 1.875
+For our Lotto PMF, that means:
 
-We can calculate the standard deviation, which describes the spread in terms of the original unit (goals), by taking the square root.
-
-std = sqrt(1.875) = 1.369
-
-
+ $ \Large E((X-\mu)^2) = \sigma^2 = \Sigma^n_{i=1}p(x_i)(x_i - \mu)^2$
 
 
 ```python
-# Again, check with builtins
-mean, var = stats.binom.stats(n, p, moments='mv')
-print(f"mean: {mean}, var: {var}, std: {np.sqrt(var)}")
-```
-
-    mean: 7.5, var: 1.875, std: 1.3693063937629153
-
-
-# Code along
-What is the probability of a team scoring 7 goals in a shootout?
-
-
-
-
-
-```python
-# Code here
-```
-
-# Continuous Distributions
-
-As we alluded to earlier, a continuous function represents an infinite number of possible values within a range. One way to think about it is that continuous variables are obtained by measuring, while discrete are obtained by counting.  
-
-We could be speaking about the distribution of heights of the US adult populations, the distribution of systolic blood pressure of students enrolled in private college,  the distribution of seconds before the first customer arrives at a shop.  Within the range of possible values, there are no discrete values by which we can associate outcomes. An outcome can be any value within the range.  Because of this, the probability associated with any specific value is zero, and we can only speak about probability in terms of the probability that the outcome will be between two outcomes. 
-
-## The Normal/Gaussian Distribution 
-
-The normal distribution describes many phenomena. Think of anything that has a typical range:
-- human body temperatures
-- sizes of elephants
-- sizes of stars
-- populations of cities
-- IQ
-- Heart rate
-
-Among human beings, 98.6 degrees Fahrenheit is an _average_ body temperature. Many folks' temperatures won't measure _exactly_ 98.6 degrees, but most measurements will be _close_. It is much more common to have a body temperature close to 98.6 (whether slightly more or slightly less) than it is to have a body temperature far from 98.6 (whether significantly more or significantly less). This is a hallmark of a normally distributed variable.
-
-Similarly, there are large elephants and there are small elephants, but most elephants are near the average size.
-
-The normal distribution is _very_ common in nature (**Why?**) and will arise often in your work. Get to know it well!
-
-You will recognize it by its characteristic bell curve. 
-
-![normal_curve](img/IQ_normal.png)
-
-### Probability Density Function and Cumulative Distribution Function
-
-The bell curve is an example of a $\bf{probability\ density\ function\ (pdf)}$, which plays the same role for continuous distributions that the pmf plays for discrete distributions.
-
-
-$\Large f(x) = \frac{1}{\sigma\sqrt{2\pi}}exp\left[\frac{-(x - \mu)^2}{2\sigma^2}\right]$
-
-Since a continuous random variable can take any of an _infinite_ number of values, it doesn't make sense to speak of the probability that the variable take any particular value. Think of throwing a dart at a dartboard. The chance that the dart hit any particular point on the board is _zero_. But we can still make sense of the idea of the probability of the variable taking a value _in a particular range_, and this is why we use the word 'density' for continuous distributions.
-
-You can get Euler's number $e$ from `numpy.e` or (the method) `numpy.exp()`.
-
-
-```python
-fig, ax = plt.subplots(figsize=(10,10))
-uniform = sorted(np.random.uniform(5,15, 1000))
-probs = [stats.norm(10).pdf(num) for num in uniform]
-plt.plot(uniform, probs)
+# Calculate the variance for the Lotto Ball example
 
 ```
 
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a29395160>]
+    array([1.8225, 2.56  , 2.89  , 3.0625])
 
 
 
+## Uniform Distribution
 
-![png](index_files/index_44_1.png)
+The uniform distribution describes a set of discrete outcomes whose probabilities are all equally likely.
 
+A common example is the roll of a die.  
 
-The $\bf{cumulative\ distribution\ function\ (cdf)}$ gives, at any value $x$, the probability that a continuous variable take a value that is _less than or equal to $x$_.
+![dice](https://media.giphy.com/media/3ohhwLh5dw0i7iLzOg/giphy.gif)
 
-The cdf will therefore be, for any distribution, a monotonically increasing (or, strictly, nondecreasing) function. That is, $cdf(x_2) \geq cdf(x_1)$ if $x_2 \geq x_1$.
+The pmf of a discrete uniform distribution is simply:
 
-[Here's](http://www.mas.ncl.ac.uk/~nmf16/teaching/mar1002/lect07.pdf) a helpful document on continuous random variables.
+$ f(x)=\frac{1}{n} $
+
+Let's take the example of a twelve-sided die, and plot the PMF.  
+
+The probability for rolling any number, is 1/12.
 
 
 ```python
-fig, ax = plt.subplots(figsize=(10,10))
-uniform = sorted(np.random.uniform(5,15, 1000))
-probs = [stats.norm(10, 1).cdf(num) for num in uniform]
-ax.plot(uniform, probs)
-ax.set_title("CDF of Normal Distribution")
+# expected value for a roll of a six-side die
+expected_value = sum([1/12 * n for n in range(1,13)])
+print(f'Expected value: {expected_value}')
+# variance for a roll of a six-sided die
+variance = sum([1/12 *(n - expected_value)**2 for n in range(1,13)])
+print(f'Variance: {variance}')
+```
+
+    Expected value: 6.5
+    Variance: 11.916666666666664
+
+
+We can also calcalate the mean as follows:  
+$\Large E(X)=\frac{a+b}{2}$
+
+Where a is the lowest value and b is the highest. 
+
+
+
+
+```python
+# Let's check out that the two methods equal the same thing.
+expected_value == (1+12)/2
 ```
 
 
 
 
-    Text(0.5, 1.0, 'CDF of Normal Distribution')
+    True
 
 
 
+Variance can be calculated as follows:
 
-![png](index_files/index_46_1.png)
-
-
-## Center/Mean/Expected Value
-
-We describe the shape of continuous distributions with the same language that we used with discrete.  The expected value of a discrete distribution is the weighted sum of all values of x, where the weight is their probability.  Since there are no discrete values for x in the continuous distribution, to gain the weighted sum of the probabilities, we take the integral:
-
-mean = $\Large\mu = \int_Xxp(x)dx$, <br/>
-
-where $p(x)$ is the probability density function associated with the distribution $X$.
-
-When working in numpy, the mean is represented by the `loc` parameter, and specifies the center of the distribution on the x-axis
+$ \Large\sigma^2=\frac{(b-a+1)^2-1}{12} $
 
 
 ```python
-fig, ax = plt.subplots()
-sns.kdeplot(np.random.normal(loc = 0, size =1000), ax = ax, shade='blue')
-sns.kdeplot(np.random.normal(loc = 3, size =1000), ax = ax, shade='red')
+# Again, let's check our math
+round(variance,7) == round(((12-1+1)**2-1)/12, 7)
 ```
 
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a294bd9b0>
+    True
 
-
-
-
-![png](index_files/index_49_1.png)
 
 
 
 ```python
-uniform_10 = sorted(np.random.uniform(5, 15, 2000))
-probs_10 = [stats.norm(10).pdf(num) for num in uniform_10]
+import matplotlib.pyplot as plt
+# Use a barplot to recreate the pmf of a single roll of a 12-sided die.
 
-uniform_0 = sorted(np.random.uniform(-5, 5, 2000))
-probs_0 = [stats.norm(0).pdf(num) for num in uniform_0]
 
-plt.plot(uniform_10,probs_10)
-plt.plot(uniform_0, probs_0)
+```
+
+## PDF: Probability Density Function
+> Probability density functions are similar to PMFs, in that they describe the probability of a result within a range of values.  But where PMFs can be descibed with barplots, PDFs are smooth curves.  
+
+![](images/pdf_temp.png)
+
+
+
+### Expected value and variance for PDFs:
+![](images/exp_v_pdf.png)
+
+
+![](images/pdf_inter.png)
+
+# Describing the PDF
+
+Instead of calculating the mean and standard deviation by hand, we will rather get familiar with how they affect the shape of our PDF.
+
+
+The mean of our PDF affects where it is centered on the x-axis.  In numpy and stats, mean is denoted by the loc parameter.
+
+The two plots below have the same shape, but different centers.
+
+
+```python
+# We can create a normal distribution using scipy
+import scipy
+import numpy as np
+
+mean = 0
+number_range = np.arange(-4,4,.01)
+number_prob = [scipy.stats.norm(mean, 1).pdf(n) for n in number_range]
+
+mean = 5
+number_range_2 = np.arange(2,9,.01)
+number_prob_2 = [scipy.stats.norm(mean, 1).pdf(n) for n in number_range_2]
+
+
+plt.plot(number_range, number_prob)
+plt.plot(number_range_2, number_prob_2)
 ```
 
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a29483978>]
+    [<matplotlib.lines.Line2D at 0x1a2a2fc438>]
 
 
 
 
-![png](index_files/index_50_1.png)
+![png](index_files/index_37_1.png)
 
 
-## Spread/Variance/std
-
-std = $\Large\sigma = \sqrt{\int_X(x - \mu)^2p(x)dx}$, <br/> where again $p(x)$ is the probability density function of X.
-
-
-
-In numpy, we designate the standard deviation with the `scale` parameter. Alter the parameter below.  Larger numbers make the distribution wider, smaller numbers make it skinnier.
-
+The variance of our plots describes how closely the points are gathered around the mean.  Low variance means tight and skinny, high variance short and wide.
 
 
 ```python
-fig, ax = plt.subplots()
-sns.kdeplot(np.random.normal(loc = 0, scale=2.0, size =1000), ax = ax, shade='blue')
-sns.kdeplot(np.random.normal(loc = 3, scale=1.0,  size =1000), ax = ax, shade='red')
+
+# Mess around with the variance to see how the shape is altered.
+import scipy
+import numpy as np
+
+mean = 0
+variance = 1
+number_range = np.arange(-4,4,.01)
+number_prob = [scipy.stats.norm(mean, variance).pdf(n) for n in number_range]
+
+variance = .1
+mean = 5
+number_range_2 = np.arange(2,9,.01)
+number_prob_2 = [scipy.stats.norm(mean, variance).pdf(n) for n in number_range_2]
+
+
+plt.plot(number_range, number_prob)
+plt.plot(number_range_2, number_prob_2)
 ```
 
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2d48b4a8>
+    [<matplotlib.lines.Line2D at 0x1a2863ffd0>]
 
 
 
 
-![png](index_files/index_54_1.png)
+![png](index_files/index_39_1.png)
 
 
 ## Skew 
 
 We will touch briefly on the third and fourth moments for the normal curve. Skew is a measure of assymemtry.  A skew of zero is perfectly symetrical about the mean.   
-![skew](img/skew.png)
-
+![skew](images/skew.png)
 
 
 ```python
-fig, ax = plt.subplots()
-normal_sample = np.random.normal(0,1, 1000)
-sns.kdeplot(normal_sample, ax = ax)
-ax.set_title(f'Slight <fill in> skew:\n {stats.skew(normal_sample)}');
+# We can check the skew with stats.skew
+number_range = np.random.normal(10,1,1000)
+stats.skew(number_range)
 ```
 
 
-![png](index_files/index_56_0.png)
 
 
-### Transforming  Left/Negatively Skewed Data
+    -0.13301302069602738
+
+
+
+### Transforming  Right/Positively Skewed Data
 
 We may want to transform our skewed data to make it approach symmetry.
 
@@ -562,29 +388,290 @@ x to log base 10 of x, or x to log base e of x (ln x), or x to log base 2 of x, 
 The square, x to x2, has a moderate effect on distribution shape and it could be used to reduce left skewness.
 Another method of handling skewness is finding outliers and possibly removing them
 
-## Kurtosis
+## Pair: Report Back the effect of your transformation
+
+Below, we have added some significant right skewed to the data by adding points between 2 and 4 standard deviations to to the right of the mean.
+
+Each group will apply a transformation mentioned about to the data, then report back the new skew.
+
+
+```python
+number_range = np.random.normal(10,1,1000)
+some_right_skew = np.arange(12,14,.01)
+right_skew = np.concatenate([number_range, some_right_skew])
+stats.skew(right_skew)
+
+
+```
 
 
 
-![kurtosis](img/kurtosis.png)
 
-## Standard Normal Distribution or the Z Distribution
-
-A standard normal distribution has a mean of 0 and variance of 1. This is also known as a z distribution. You may see the notation 
-
-$ N(μ,σ2)$
-
-where N signifies that the distribution is normal, μ is the mean, and σ2 is the variance. 
-
-![norm_to_z](img/norm_to_z.png)
+    0.5841183952832225
 
 
 
+# Kurtosis
 
-A Z distribution may be described as N(0,1).
+![kurtosis](images/kurtosis.png)
 
-![z_curve](img/z_curve.png)
+
+## CDF: Cumulative Distribution Function
+
+![](images/cdf.png)
+
+The cumulative distribution function describes the probability that your result will be of a value equal to or below a certain value. It can apply to both discrete or continuous functions.
+
+For the scenario above, the CDF would describe the probability of drawing a ball equal to or below a certain number.  
+
+In order to create the CDF from a sample, we:
+- align the values from least to greatest
+- for each value, count the number of values that are less than or equal to the current value
+- divide that count by the total number of values
+
+The CDF of the Lotto example plots how likely we are to get a ball less than or equal to a given example. 
+
+Let's create the CDF for our Lotto example
+
+
+
+```python
+# align the values
+lotto_dict = {0:0, 1:50, 2:25, 3:15, 4:10}
+values = list(lotto_dict.keys())
+# count the number of values that are less than or equal to the current value
+count_less_than_equal = np.cumsum(list(lotto_dict.values()))
+# divide by total number of values
+prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values()) 
+
+```
+
+
+```python
+
+fig, ax = plt.subplots()
+ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
+for i in range(0,5):
+    ax.hlines(prob_less_than_or_equal[i], i,i+1, 'r', lw=5,)
+for i in range(0,4):
+    ax.vlines(i+1, prob_less_than_or_equal[i+1],prob_less_than_or_equal[i],  linestyles='dotted')
+ax.legend(loc='best' )
+ax.set_ylim(0);
+```
+
+
+![png](index_files/index_51_0.png)
+
+
+# Pair Program
+Taking what we know about cumulative distribution functions, create a plot of the CDF of a fair 12-sided die.
+
+Take this in steps (no pun intended).
+1. Create a list of possible rolls. 
+2. Multiply the probability of each roll by the value of the roll.
+3. Record the cumulative sum of each roll (hint: try np.cumsum()
+
+- For continuous random variables, obtaining probabilities for observing a specific outcome is not possible 
+- Have to be careful with interpretation in PDF
+
+We can, however, use the CDF to learn the probability that a variable will be less than or equal to a given value.
+
+
+
+Consider the following normal distributions of heights (more on the normal distribution below).
+
+The PDF and the CDF look like so:
+
+
+
+```python
+r = sorted(stats.norm.rvs(loc=70,scale=3,size=1000))
+r_cdf = stats.norm.cdf(r, loc=70, scale=3)
+fig, (ax1,ax2) = plt.subplots(1,2, figsize=(10,5))
+sns.kdeplot(height_of_US_men, ax=ax1, shade=True)
+ax1.set_title('PDF of Male Height in US')
+
+ax2.plot(r, r_cdf, color='g')
+ax2.set_title('CDF of Male Height in the US')
+
+
+```
+
+
+
+
+    Text(0.5, 1.0, 'CDF of Male Height in the US')
+
+
+
+
+![png](index_files/index_55_1.png)
+
+
+If we provide numpy with the underlying parameters of our distribution, we can calculate: 
+
+
+
+```python
+# the probability that a value falls below a specified value
+r = stats.norm(70,3)
+r.cdf(73)
+
+```
+
+
+
+
+    0.8413447460685429
+
+
+
+
+```python
+# the probability that a value falls between two specified values
+r = stats.norm(70,3)
+r.cdf(73) - r.cdf(67)
+
+```
+
+
+
+
+    0.6826894921370859
+
+
+
+We can also calculate the value associated with a specfic percentile:
+
+
+```python
+r.ppf(.95)
+```
+
+
+
+
+    74.93456088085442
+
+
+
+And from there, the value of ranges, such as the interquartile range:
+
+
+```python
+print(f'interquartile range {r.ppf(.25)} - {r.ppf(.75)}')
+
+# We can see that the boxplot's interquartile range aligns with our ppf calculation above
+box = plt.boxplot(stats.norm.rvs(loc=70,scale=3,size=1000));
+print(box['boxes'][0].get_data())
+
+```
+
+    interquartile range 67.97653074941175 - 72.02346925058825
+    (array([0.925, 1.075, 1.075, 0.925, 0.925]), array([67.91487761, 67.91487761, 72.0766665 , 72.0766665 , 67.91487761]))
+
+
+
+![png](index_files/index_62_1.png)
+
+
+# 3. Bernouli and Binomial Distributions
+
+In our work as data scientists, we will often come across scenarios which our results can be categorized as failure or success (0 or 1). The simplest example is, once again, a coin flip.  In this scenario, we define either heads or tails as a "success", and assume, if the coin is fair, the probability of success to be .5
+
+![](images/bernouli.png)
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+# A Bernouli trial for a fair coin can be performed with numpy's binomial
+
+p = .5
+np.random.binomial(1,.5, size=50)
+
+binom_means = []
+for _ in range(1000):
+    binom_means.append(np.random.binomial(1,.5, size=100).mean())
+
+
+plt.hist(binom_means, bins=100);
+ 
+
+```
+
+
+![png](index_files/index_66_0.png)
+
+
+## Binomial
+
+The Binomial distribution describes the number of successess of a set of bernouli trials. For example, if we flipped a coin 10 times, how many times would it land on heads.  We would expect to see the 5 heads.  
+
+- If we repeat this process multiple times
+- n independent Bernoulli trials
+
+- Eg:
+> - 𝑃(𝑌=0) (or the soccer player doesn't score a single time)? 
+> - 𝑃(𝑌=1) (or the soccer player scores exactly once)? 
+> - 𝑃(𝑌=2) (or the soccer player scores exactly twice)? 
+> - 𝑃(𝑌=3) (or the soccer player scores exactly three times)?
+
+
+```python
+# Consider a soccer player has a 80% success rate in converting penalties.
+# Use numpy's binomial function to plot a binomial distribution 
+# of the number of goals scored over 10 tries across 100 trials.
+
+results = np.random.binomial(10, .8, size=100)
+plt.hist(results);
+```
+
+
+![png](index_files/index_70_0.png)
+
+
+![](images/binomial.png)
+
+- Expected Value
+> $E(X) = np$ <br>
+- Variance
+> $Var(X) = np(1-p)$<br>
+
+- If we want to see the probability of a certain number of successes, we use the pmf.
+> $pmf = {n \choose k}*p^k*(1-p)^{n-k}$
+
+
+# 4. Normal Distribution
+
+The last distribution we will cover today is the normal distribution. You probably recognize its distinctive bell curve.  It is the most important distribution for our purposes in this course and will reappear often in machine learning.
+
+![](images/normal.png)
+
+
+```python
+# suppose the average height of an American woman is 65 inches
+# with a standard deviation of 3.5 inches. 
+# Use numpy's random.normal to generate a sample of 1000 women
+# and plot the histogram of the sample.
+
+```
+
+
+![png](index_files/index_76_0.png)
+
+
+![](images/normal_2.png)
+
+The standard normal distribution, or z curve, is centered around 0 with a standard deviation of 1.  
+
+![](images/empirical_rule.png)
 
 ## Empirical Rule
+> The empirical or 68–95–99.7 states that 68% of the values of a normal distribution of data lie within 1 standard deviation of the mean, 95% within 2 stds, and 99.7 within three.  
+> The empirical rule has countless applications in data science, which we will expand upon in the next few lectures.
 
-![empirical_rule](img/empirical_rule.png)
+
+```python
+
+```
