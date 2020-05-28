@@ -14,15 +14,26 @@
 
 - A statistical distribution is a representation of the frequencies of potential events or the percentage of time each event occurs.
 
+# Activation
+
+![king_county](images/king_county.png)
+
+
+<p> A probability distribution describes the probability of an event in a sample space.  We recently finished a project investigating opportunity youth in Seattle's King County.  Considering the idea that a distribution can be the probability of any variable, what interesting distributions did you come across?  For example, you most likely looked at the fraction of opportunity youth in South King County vs. youth that fall outside of that category.  The probability that a youth is an opportunity youth, and the corresponding probability that a youth is not an opportunity you, is probability distribution. </p>
+
+
+#### Group Discussion Answers
+
+\>  
+
 
 
 # 1. Discrete vs Continuous
 
-
-What is the difference between a continuous and a discrete distribution?
+We will learn about a variety of different probability distributions, but before we do so, we need to establish the difference between **discrete** and **continuous** variables.
 
 ## Discrete
->  With discrete distributions, the values can only take a finite set of values.  Take, for example, a roll of a single die. 
+>  With discrete distributions, the values can only take a finite set of values.  Take, for example, a roll of a single six-sided die. 
 
 ![](images/uniform.png)
 
@@ -30,9 +41,11 @@ What is the difference between a continuous and a discrete distribution?
 
 #### Examples of discrete distributions:
 
-> 1. The Bernoulli Distribution: - represents the probability of success for a certain experiment (binary outcome).
-> 2. The Poisson Distribution:- represents the probability of 𝑛 events in a given time period when the overall rate of occurrence is constant.
-> 3. The Uniform Distribution:- occurs when all possible outcomes are equally likely.
+> 1. The Uniform Distribution:- occurs when all possible outcomes are equally likely.
+> 2. The Bernoulli Distribution: - represents the probability of success for a certain experiment (binary outcome).
+> 3. The Binomial Distribution - represents the probability of observing a specific number of successes (Bernoulli trials) in a specific number of trials.
+> 4. The Poisson Distribution:- represents the probability of 𝑛 events in a given time period when the overall rate of occurrence is constant.
+
 
 ## Continuous
 
@@ -44,9 +57,10 @@ With a continous distribution, the set of possible results is an infinite set of
 ![](images/pdf.png)
 
 #### Examples of continuous distributions
-> 1. The Normal or Gaussian distribution.
-> 2. Exponential
-> 3. Continuous uniform
+> 1. Continuous uniform
+> 2. The Normal or Gaussian distribution.
+> 3. Exponential
+
 
 The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
 
@@ -93,7 +107,7 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_13_0.png)
+![png](index_files/index_15_0.png)
 
 
 # 2. PMFs, PDFs, and CDFs, oh my!
@@ -111,7 +125,7 @@ We then represent this function in a plot like so:
 
 ### Expected Value/Mean
 
-The expected value, or the mean, describes the 'center' of the distribution (ou may hear this called the first moment).  The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
+The expected value, or the mean, describes the 'center' of the distribution (you may hear this called the first moment).  The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
 
 For a discrete distribution, working from the vantage point of a collected sample of n data points:
 
@@ -122,10 +136,15 @@ If we are working from the vantage point of known probabilities, the mean is ref
 The expected value of the Lotto example is:
 ${\displaystyle \operatorname {E} [X]= \Sigma^n_{i=1}p(x_i)x_i}$
 
+# Student input:
+Help me calculate the expected value of the lotto example:
+
+
 
 ```python
 
-expected_value = np.sum(np.array(list(lotto_dict.keys())) * np.array(list(lotto_dict.values())))
+expected_value = np.sum(np.array(list(lotto_dict.keys())) 
+                        * np.array(list(lotto_dict.values())))
 expected_value
 ```
 
@@ -139,7 +158,7 @@ expected_value
 ### Variance/Standard Deviation
 Variance describes the spread of the data (it is also referred to as the second moment).  The 'spread' refers loosely to how far away the more extreme values are from the center.
 
-Standard deviation is the square root of variance, effectively measures the *average distance away from the mean*.
+Standard deviation is the square root of variance, and effectively measures the *average distance away from the mean*.
 
 From the standpoint of a sample, the variance of a discrete distribution of n data points is:
 
@@ -152,9 +171,14 @@ For our Lotto PMF, that means:
 
  $ \Large E((X-\mu)^2) = \sigma^2 = \Sigma^n_{i=1}p(x_i)(x_i - \mu)^2$
 
+# Student input:
+Help me calculate the variance for the Lotto Ball example
+
+
 
 ```python
-expected_value = np.sum(np.array(list(lotto_dict.keys())) * np.array(list(lotto_dict.values())))
+expected_value = np.sum(np.array(list(lotto_dict.keys())) 
+                        * np.array(list(lotto_dict.values())))
 variance = np.sum(np.array(list(lotto_dict.values())) 
                   * (np.array(list(lotto_dict.keys()) - np.full(4,expected_value))**2
                                  ))
@@ -195,6 +219,11 @@ Variance can be calculated as follows:
 
 $ \Large\sigma^2=\frac{(b-a+1)^2-1}{12} $
 
+![pear](https://media.giphy.com/media/fBS9UfNnOtkVDqR70I/giphy.gif)
+
+# Short pair programming (2 minutes)
+Create the pmf of a 12 sided die
+
 
 ```python
 result_set = list(range(1,13))
@@ -211,7 +240,7 @@ plt.bar(result_set, roll_probabilities)
 
 
 
-![png](index_files/index_25_1.png)
+![png](index_files/index_31_1.png)
 
 
 ## PDF: Probability Density Function
@@ -220,6 +249,10 @@ plt.bar(result_set, roll_probabilities)
 ![](images/pdf_temp.png)
 
 
+
+We can think of a pdf as a bunch of bars of probabilities getting smaller and smaller until each neighbor is indistinguishable from its neighbor.
+
+It is then intuitive that you cannot calculate expected value and variance in the same way as we did with pmfs.  Instead, be have to integrate over the entirity of the curve to calculate the expected value.
 
 ### Expected value and variance for PDFs:
 ![](images/exp_v_pdf.png)
@@ -242,6 +275,40 @@ The variance of our plots describes how closely the points are gathered around t
 
 We will touch briefly on the third and fourth moments for the normal curve. Skew is a measure of assymemtry.  A skew of zero is perfectly symetrical about the mean.   
 ![skew](images/skew.png)
+
+To add right skew to the data, let's add some outliers to the left of the mean.
+
+To learn about skew, let's take a normal distribution, and add values to skew it.
+
+
+```python
+z_curve = np.random.normal(0,1, 1000)
+add_right_skew = np.random.choice(np.random.normal(5,1,1000) , 10)
+right_skewed_data = np.concatenate([z_curve, add_right_skew])
+
+fig, ax = plt.subplots()
+ax.hist(right_skewed_data)
+ax.set_title(f"Right Skew {stats.skew(right_skewed_data)}");
+```
+
+
+![png](index_files/index_43_0.png)
+
+
+
+```python
+z_curve = np.random.normal(0,1, 1000)
+add_left_skew = np.random.choice(np.random.normal(-5,1,1000) , 10)
+left_skewed_data = np.concatenate([z_curve, add_left_skew])
+
+fig, ax = plt.subplots()
+ax.hist(left_skewed_data)
+ax.set_title(f"Left Skew {stats.skew(left_skewed_data)}");
+```
+
+
+![png](index_files/index_44_0.png)
+
 
 ### Transforming  Right/Positively Skewed Data
 
@@ -274,14 +341,16 @@ Each group will apply a transformation mentioned about to the data, then report 
 
 
 ```python
-print(stats.skew(np.log(right_skew)))
-print(stats.skew(np.sqrt(right_skew)))
-print(stats.skew(right_skew**(1/3)))
+print(stats.skew(np.log(right_skewed_data)))
+print(stats.skew(np.sqrt(right_skewed_data)))
+print(stats.skew(right_skewed_data**(1/3)))
+print(stats.skew(left_skewed_data**2))
 ```
 
-    0.26286322959592073
-    0.4283951128196159
-    0.37435432626508097
+    0.015085669510639997
+    0.21970584419828817
+    0.15219777277690705
+    -0.002314263865889254
 
 
 # Kurtosis
@@ -331,7 +400,7 @@ for i in range(0,12):
 ```
 
 
-![png](index_files/index_43_0.png)
+![png](index_files/index_54_0.png)
 
 
 - For continuous random variables, obtaining probabilities for observing a specific outcome is not possible 
