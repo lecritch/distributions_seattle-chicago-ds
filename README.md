@@ -14,15 +14,26 @@
 
 - A statistical distribution is a representation of the frequencies of potential events or the percentage of time each event occurs.
 
+# Activation
+
+![king_county](images/king_county.png)
+
+
+<p> A probability distribution describes the probability of an event in a sample space.  We recently finished a project investigating opportunity youth in Seattle's King County.  Considering the idea that a distribution can be the probability of any variable, what interesting distributions did you come across?  For example, you most likely looked at the fraction of opportunity youth in South King County vs. youth that fall outside of that category.  The probability that a youth is an opportunity youth, and the corresponding probability that a youth is not an opportunity you, is probability distribution. </p>
+
+
+#### Group Discussion Answers
+
+\>  
+
 
 
 # 1. Discrete vs Continuous
 
-
-What is the difference between a continuous and a discrete distribution?
+We will learn about a variety of different probability distributions, but before we do so, we need to establish the difference between **discrete** and **continuous** variables.
 
 ## Discrete
->  With discrete distributions, the values can only take a finite set of values.  Take, for example, a roll of a single die. 
+>  With discrete distributions, the values can only take a finite set of values.  Take, for example, a roll of a single six-sided die. 
 
 ![](images/uniform.png)
 
@@ -30,9 +41,11 @@ What is the difference between a continuous and a discrete distribution?
 
 #### Examples of discrete distributions:
 
-> 1. The Bernoulli Distribution: - represents the probability of success for a certain experiment (binary outcome).
-> 2. The Poisson Distribution:- represents the probability of 𝑛 events in a given time period when the overall rate of occurrence is constant.
-> 3. The Uniform Distribution:- occurs when all possible outcomes are equally likely.
+> 1. The Uniform Distribution:- occurs when all possible outcomes are equally likely.
+> 2. The Bernoulli Distribution: - represents the probability of success for a certain experiment (binary outcome).
+> 3. The Binomial Distribution - represents the probability of observing a specific number of successes (Bernoulli trials) in a specific number of trials.
+> 4. The Poisson Distribution:- represents the probability of 𝑛 events in a given time period when the overall rate of occurrence is constant.
+
 
 ## Continuous
 
@@ -44,9 +57,10 @@ With a continous distribution, the set of possible results is an infinite set of
 ![](images/pdf.png)
 
 #### Examples of continuous distributions
-> 1. The Normal or Gaussian distribution.
-> 2. Exponential
-> 3. Continuous uniform
+> 1. Continuous uniform
+> 2. The Normal or Gaussian distribution.
+> 3. Exponential
+
 
 The distinction between descrete and continuous is very important to have in your mind, and can easily be seen in plots. 
 
@@ -102,7 +116,7 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_14_0.png)
+![png](index_files/index_16_0.png)
 
 
 
@@ -144,7 +158,7 @@ plt.tight_layout()
 ```
 
 
-![png](index_files/index_15_0.png)
+![png](index_files/index_17_0.png)
 
 
 # 2. PMFs, PDFs, and CDFs, oh my!
@@ -162,11 +176,36 @@ We then represent this function in a plot like so:
 
 
 ```python
+# For each number, we calculate the probability that pull it from the jar by dividing
+
+numbers = range(1,5)
+counts = [50,25, 15, 10]
+
+# calculate the probs by dividing each count by the total number of balls.
+
+probs = [count/sum(counts) for count in counts]
+
+lotto_dict = {number: prob for number,prob in zip(numbers, probs)}
+lotto_dict
+```
+
+
+
+
+    {1: 0.5, 2: 0.25, 3: 0.15, 4: 0.1}
+
+
+
+
+```python
 # Plot here!
 
-x = range(1, 5)
-lotto_dict = {1: 0.5, 2: 0.25, 3: 0.15, 4:.1}
-y = [lotto_dict[num] for num in x]
+# x = range(1, 5)
+# lotto_dict = {1: 0.5, 2: 0.25, 3: 0.15, 4:.1}
+# y = [lotto_dict[num] for num in x]
+
+x = list(lotto_dict.keys())
+y = list(lotto_dict.values())
 
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 ax.plot(x, y, 'bo', ms=8, label='lotto pmf')
@@ -175,12 +214,12 @@ ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_19_0.png)
+![png](index_files/index_22_0.png)
 
 
 ### Expected Value/Mean
 
-The expected value, or the mean, describes the 'center' of the distribution (ou may hear this called the first moment).  The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
+The expected value, or the mean, describes the 'center' of the distribution (you may hear this called the first moment).  The 'center' refers loosely to the middle-values of a distribution, and is measured more precisely by notions like the mean, the median, and the mode.
 
 For a discrete distribution, working from the vantage point of a collected sample of n data points:
 
@@ -191,17 +230,21 @@ If we are working from the vantage point of known probabilities, the mean is ref
 The expected value of the Lotto example is:
 ${\displaystyle \operatorname {E} [X]= \Sigma^n_{i=1}p(x_i)x_i}$
 
+# Student input:
+Help me calculate the expected value of the lotto example:
+
+
 
 ```python
-# Calculate the expected value of the lotto example:
-
+# code
 ```
 
 
 ```python
 #__SOLUTION__
 
-expected_value = np.sum(np.array(list(lotto_dict.keys())) * np.array(list(lotto_dict.values())))
+expected_value = np.sum(np.array(list(lotto_dict.keys())) 
+                        * np.array(list(lotto_dict.values())))
 expected_value
 ```
 
@@ -215,7 +258,7 @@ expected_value
 ### Variance/Standard Deviation
 Variance describes the spread of the data (it is also referred to as the second moment).  The 'spread' refers loosely to how far away the more extreme values are from the center.
 
-Standard deviation is the square root of variance, effectively measures the *average distance away from the mean*.
+Standard deviation is the square root of variance, and effectively measures the *average distance away from the mean*.
 
 From the standpoint of a sample, the variance of a discrete distribution of n data points is:
 
@@ -228,23 +271,20 @@ For our Lotto PMF, that means:
 
  $ \Large E((X-\mu)^2) = \sigma^2 = \Sigma^n_{i=1}p(x_i)(x_i - \mu)^2$
 
+# Student input:
+Help me calculate the variance for the Lotto Ball example
+
+
 
 ```python
-# Calculate the variance for the Lotto Ball example
-
+# Code
 ```
-
-
-
-
-    array([1.8225, 2.56  , 2.89  , 3.0625])
-
-
 
 
 ```python
 #__SOLUTION__
-expected_value = np.sum(np.array(list(lotto_dict.keys())) * np.array(list(lotto_dict.values())))
+expected_value = np.sum(np.array(list(lotto_dict.keys())) 
+                        * np.array(list(lotto_dict.values())))
 variance = np.sum(np.array(list(lotto_dict.values())) 
                   * (np.array(list(lotto_dict.keys()) - np.full(4,expected_value))**2
                                  ))
@@ -325,11 +365,14 @@ round(variance,7) == round(((12-1+1)**2-1)/12, 7)
 
 
 
+![pear](https://media.giphy.com/media/fBS9UfNnOtkVDqR70I/giphy.gif)
+
+# Short pair programming (2 minutes)
+Create the pmf of a 12 sided die
+
 
 ```python
-import matplotlib.pyplot as plt
-# Use a barplot to recreate the pmf of a single roll of a 12-sided die.
-
+# Your code here
 
 ```
 
@@ -350,7 +393,7 @@ plt.bar(result_set, roll_probabilities)
 
 
 
-![png](index_files/index_34_1.png)
+![png](index_files/index_41_1.png)
 
 
 ## PDF: Probability Density Function
@@ -359,6 +402,10 @@ plt.bar(result_set, roll_probabilities)
 ![](images/pdf_temp.png)
 
 
+
+We can think of a pdf as a bunch of bars of probabilities getting smaller and smaller until each neighbor is indistinguishable from its neighbor.
+
+It is then intuitive that you cannot calculate expected value and variance in the same way as we did with pmfs.  Instead, be have to integrate over the entirity of the curve to calculate the expected value.
 
 ### Expected value and variance for PDFs:
 ![](images/exp_v_pdf.png)
@@ -377,67 +424,68 @@ The two plots below have the same shape, but different centers.
 
 
 ```python
-# We can create a normal distribution using scipy
-import scipy
-import numpy as np
+fig, ax = plt.subplots()
 
 mean = 0
-number_range = np.arange(-4,4,.01)
-number_prob = [scipy.stats.norm(mean, 1).pdf(n) for n in number_range]
+z_curve = np.linspace(stats.norm(mean,1).ppf(0.01),
+             stats.norm(mean,1).ppf(0.99), 100)
+ax.plot(z_curve, stats.norm(mean,1).pdf(z_curve),
+     'r-', lw=5, alpha=0.6, label='z_curve')
 
-mean = 5
-number_range_2 = np.arange(2,9,.01)
-number_prob_2 = [scipy.stats.norm(mean, 1).pdf(n) for n in number_range_2]
+mean = 1
+z_curve = np.linspace(stats.norm(mean,1).ppf(0.01),
+             stats.norm(mean,1).ppf(0.99), 100)
+ax.plot(z_curve, stats.norm(mean,1).pdf(z_curve),
+     'b-', lw=5, alpha=0.6, label='norm pdf')
 
-
-plt.plot(number_range, number_prob)
-plt.plot(number_range_2, number_prob_2)
+ax.set_title("Two distributions differing only in mean")
 ```
 
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a2a2fc438>]
+    Text(0.5, 1.0, 'Two distributions differing only in mean')
 
 
 
 
-![png](index_files/index_41_1.png)
+![png](index_files/index_49_1.png)
 
 
 The variance of our plots describes how closely the points are gathered around the mean.  Low variance means tight and skinny, high variance short and wide.
 
 
 ```python
-
 # Mess around with the variance to see how the shape is altered.
-import scipy
-import numpy as np
 
-mean = 0
-variance = 1
-number_range = np.arange(-4,4,.01)
-number_prob = [scipy.stats.norm(mean, variance).pdf(n) for n in number_range]
+fig, ax = plt.subplots()
 
-variance = .1
-mean = 5
-number_range_2 = np.arange(2,9,.01)
-number_prob_2 = [scipy.stats.norm(mean, variance).pdf(n) for n in number_range_2]
+mean = 1
+var = 1
+z_curve = np.linspace(stats.norm(mean,var).ppf(0.01),
+             stats.norm(mean,var).ppf(0.99), 100)
+ax.plot(z_curve, stats.norm(mean,var).pdf(z_curve),
+     'r-', lw=5, alpha=0.6, label='z_curve')
 
+mean = 1
+var = 3
+z_curve = np.linspace(stats.norm(mean,var).ppf(0.01),
+             stats.norm(mean,var).ppf(0.99), 100)
+ax.plot(z_curve, stats.norm(mean,var).pdf(z_curve),
+     'b-', lw=5, alpha=0.6, label='norm pdf')
 
-plt.plot(number_range, number_prob)
-plt.plot(number_range_2, number_prob_2)
+ax.set_title("Two distributions with different variance")
 ```
 
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a2863ffd0>]
+    Text(0.5, 1.0, 'Two distributions with different variance')
 
 
 
 
-![png](index_files/index_43_1.png)
+![png](index_files/index_51_1.png)
 
 
 ## Skew 
@@ -447,16 +495,81 @@ We will touch briefly on the third and fourth moments for the normal curve. Skew
 
 
 ```python
-# We can check the skew with stats.skew
-number_range = np.random.normal(10,1,1000)
-stats.skew(number_range)
+# We can check skew with scipy
+z_curve = np.random.normal(0,1, 1000)
+print(stats.skew(z_curve))
+```
+
+    0.0858021435096131
+
+
+To add right skew to the data, let's add some outliers to the left of the mean.
+
+To learn about skew, let's take a normal distribution, and add values to skew it.
+
+
+```python
+# Update add right skew with data to skew it.
+z_curve = np.random.normal(0,1, 1000)
+add_right_skew = [0]
+right_skewed_data = np.concatenate([z_curve, add_right_skew])
+
+fig, ax = plt.subplots()
+ax.hist(right_skewed_data)
+ax.set_title(f"Right Skew {stats.skew(right_skewed_data)}");
 ```
 
 
+![png](index_files/index_56_0.png)
 
 
-    -0.13301302069602738
 
+```python
+#__SOLUTION__
+z_curve = np.random.normal(0,1, 1000)
+add_right_skew = np.random.choice(np.random.normal(5,1,1000) , 10)
+right_skewed_data = np.concatenate([z_curve, add_right_skew])
+
+fig, ax = plt.subplots()
+ax.hist(right_skewed_data)
+ax.set_title(f"Right Skew {stats.skew(right_skewed_data)}");
+```
+
+
+![png](index_files/index_57_0.png)
+
+
+
+```python
+# Now, do the same for left skewed data
+
+z_curve = np.random.normal(0,1, 1000)
+add_left_skew = [0]
+left_skewed_data = np.concatenate([z_curve, add_left_skew])
+
+fig, ax = plt.subplots()
+ax.hist(left_skewed_data)
+ax.set_title(f"Left Skew {stats.skew(left_skewed_data)}");
+```
+
+
+![png](index_files/index_58_0.png)
+
+
+
+```python
+#__SOLUTION__
+z_curve = np.random.normal(0,1, 1000)
+add_left_skew = np.random.choice(np.random.normal(-5,1,1000) , 10)
+left_skewed_data = np.concatenate([z_curve, add_left_skew])
+
+fig, ax = plt.subplots()
+ax.hist(left_skewed_data)
+ax.set_title(f"Left Skew {stats.skew(left_skewed_data)}");
+```
+
+
+![png](index_files/index_59_0.png)
 
 
 ### Transforming  Right/Positively Skewed Data
@@ -495,27 +608,42 @@ some_right_skew = np.arange(12,14,.01)
 right_skew = np.concatenate([number_range, some_right_skew])
 stats.skew(right_skew)
 
+no_skew_dist = np.random.normal(10,1, 1000)
+add_right_skew = np.random.choice(np.random.normal(12,1,1000) , 100)
+right_skewed_data = np.concatenate([no_skew_dist, add_right_skew])
+print(f'Right Skew {stats.skew(right_skewed_data)}')
 
+no_skew_dist_2 = np.random.normal(10,1, 1000)
+add_left_skew = np.random.choice(np.random.normal(8,1,1000) , 100)
+left_skewed_data = np.concatenate([no_skew_dist_2, add_left_skew])
+print(f'Left Skew {stats.skew(left_skewed_data)}')
+stats.skew(left_skewed_data)
 ```
 
+    Right Skew 0.41930878650652254
+    Left Skew -0.39891831706514613
 
 
 
-    0.5841183952832225
+
+
+    -0.39891831706514613
 
 
 
 
 ```python
 #__SOLUTION__
-print(stats.skew(np.log(right_skew)))
-print(stats.skew(np.sqrt(right_skew)))
-print(stats.skew(right_skew**(1/3)))
+print(stats.skew(np.log(right_skewed_data)))
+print(stats.skew(np.sqrt(right_skewed_data)))
+print(stats.skew(right_skewed_data**(1/3)))
+print(stats.skew(left_skewed_data**2))
 ```
 
-    0.26286322959592073
-    0.4283951128196159
-    0.37435432626508097
+    0.015085669510639997
+    0.21970584419828817
+    0.15219777277690705
+    -0.002314263865889254
 
 
 # Kurtosis
@@ -555,7 +683,6 @@ prob_less_than_or_equal = count_less_than_equal/sum(lotto_dict.values())
 
 
 ```python
-
 fig, ax = plt.subplots()
 ax.plot(values, prob_less_than_or_equal, 'bo', ms=8, label='lotto pdf')
 for i in range(0,5):
@@ -567,7 +694,7 @@ ax.set_ylim(0);
 ```
 
 
-![png](index_files/index_56_0.png)
+![png](index_files/index_70_0.png)
 
 
 # Pair Program
@@ -577,6 +704,11 @@ Take this in steps (no pun intended).
 1. Create a list of possible rolls. 
 2. Multiply the probability of each roll by the value of the roll.
 3. Record the cumulative sum of each roll (hint: try np.cumsum()
+
+
+```python
+# Your Code Here
+```
 
 
 ```python
@@ -595,7 +727,7 @@ for i in range(0,12):
 ```
 
 
-![png](index_files/index_58_0.png)
+![png](index_files/index_73_0.png)
 
 
 - For continuous random variables, obtaining probabilities for observing a specific outcome is not possible 
@@ -615,7 +747,7 @@ The PDF and the CDF look like so:
 r = sorted(stats.norm.rvs(loc=70,scale=3,size=1000))
 r_cdf = stats.norm.cdf(r, loc=70, scale=3)
 fig, (ax1,ax2) = plt.subplots(1,2, figsize=(10,5))
-sns.kdeplot(height_of_US_men, ax=ax1, shade=True)
+sns.kdeplot(r, ax=ax1, shade=True)
 ax1.set_title('PDF of Male Height in US')
 
 ax2.plot(r, r_cdf, color='g')
@@ -632,7 +764,7 @@ ax2.set_title('CDF of Male Height in the US')
 
 
 
-![png](index_files/index_61_1.png)
+![png](index_files/index_76_1.png)
 
 
 If we provide numpy with the underlying parameters of our distribution, we can calculate: 
@@ -695,11 +827,11 @@ print(box['boxes'][0].get_data())
 ```
 
     interquartile range 67.97653074941175 - 72.02346925058825
-    (array([0.925, 1.075, 1.075, 0.925, 0.925]), array([67.91487761, 67.91487761, 72.0766665 , 72.0766665 , 67.91487761]))
+    (array([0.925, 1.075, 1.075, 0.925, 0.925]), array([67.91340866, 67.91340866, 72.13480887, 72.13480887, 67.91340866]))
 
 
 
-![png](index_files/index_68_1.png)
+![png](index_files/index_83_1.png)
 
 
 # 3. Bernouli and Binomial Distributions
@@ -728,7 +860,7 @@ plt.hist(binom_means, bins=100);
 ```
 
 
-![png](index_files/index_72_0.png)
+![png](index_files/index_87_0.png)
 
 
 ## Binomial
@@ -755,7 +887,7 @@ plt.hist(results);
 ```
 
 
-![png](index_files/index_76_0.png)
+![png](index_files/index_91_0.png)
 
 
 ![](images/binomial.png)
@@ -785,7 +917,7 @@ The last distribution we will cover today is the normal distribution. You probab
 ```
 
 
-![png](index_files/index_82_0.png)
+![png](index_files/index_97_0.png)
 
 
 ![](images/normal_2.png)
