@@ -404,7 +404,7 @@ z_curve = np.random.normal(0,1, 1000)
 print(stats.skew(z_curve))
 ```
 
-    0.0858021435096131
+    0.07098768308548697
 
 
 To add right skew to the data, let's add some outliers to the left of the mean.
@@ -492,14 +492,14 @@ print(f'Left Skew {stats.skew(left_skewed_data)}')
 stats.skew(left_skewed_data)
 ```
 
-    Right Skew 0.41930878650652254
-    Left Skew -0.39891831706514613
+    Right Skew 0.45956059419444484
+    Left Skew -0.38180327187107577
 
 
 
 
 
-    -0.39891831706514613
+    -0.38180327187107577
 
 
 
@@ -664,108 +664,367 @@ print(box['boxes'][0].get_data())
 ```
 
     interquartile range 67.97653074941175 - 72.02346925058825
-    (array([0.925, 1.075, 1.075, 0.925, 0.925]), array([67.91340866, 67.91340866, 72.13480887, 72.13480887, 67.91340866]))
+    (array([0.925, 1.075, 1.075, 0.925, 0.925]), array([68.00893806, 68.00893806, 72.09126527, 72.09126527, 68.00893806]))
 
 
 
 ![png](index_files/index_75_1.png)
 
 
+# Common Discrete Distributions
+
 # 3. Bernouli and Binomial Distributions
 
-In our work as data scientists, we will often come across scenarios which our results can be categorized as failure or success (0 or 1). The simplest example is, once again, a coin flip.  In this scenario, we define either heads or tails as a "success", and assume, if the coin is fair, the probability of success to be .5
+The Bernouli distribution is the discrete distribution that describes a two-outcome trial, such as heads or tails.  The distribution is described by the probability of one random variable of the value 1 associated with the probability p, and its correlary, the probability q, associated with 0  and taking the probability 1-p. 
+
+PMF: 
+${\displaystyle {\begin{cases}q=1-p&{\text{if }}k=0\\p&{\text{if }}k=1\end{cases}}}$
+
+The simplest example is, once again, a coin flip.  In this scenario, we define either heads or tails as a "success", and assume, if the coin is fair, the probability of success to be .5
 
 ![](images/bernouli.png)
 
+Another example would be a penalty kick in soccer.
+
+![panenka](https://media.giphy.com/media/Jy1R6jdp8uXok/giphy.gif)
+
+Let's assume the probability of scoring a goal is .75, the Bernouli distribution is:
+
 
 ```python
-import numpy as np
-import matplotlib.pyplot as plt
-# A Bernouli trial for a fair coin can be performed with numpy's binomial
+# probability of scoring
+p = .75
+# probability of missing
+q = 1 -.75
 
-p = .5
-np.random.binomial(1,.5, size=50)
-
-binom_means = []
-for _ in range(1000):
-    binom_means.append(np.random.binomial(1,.5, size=100).mean())
-
-
-plt.hist(binom_means, bins=100);
- 
+fig, ax = plt.subplots()
+ax.bar(['miss', 'score'],[q,p], color=['red','green'])
+ax.set_title('Bernouli Distribution of Penalty Kicks')
 
 ```
 
 
-![png](index_files/index_79_0.png)
 
+
+    Text(0.5, 1.0, 'Bernouli Distribution of Penalty Kicks')
+
+
+
+
+![png](index_files/index_81_1.png)
+
+
+The expected value is the probability of success, i.e. **.75**
+The variance is:  
+$\sigma^2 = (.75)*(1-.75) = .1875 $
 
 ## Binomial
 
-The Binomial distribution describes the number of successess of a set of bernouli trials. For example, if we flipped a coin 10 times, how many times would it land on heads.  We would expect to see the 5 heads.  
-
-- If we repeat this process multiple times
-- n independent Bernoulli trials
-
-- Eg:
-> - 𝑃(𝑌=0) (or the soccer player doesn't score a single time)? 
-> - 𝑃(𝑌=1) (or the soccer player scores exactly once)? 
-> - 𝑃(𝑌=2) (or the soccer player scores exactly twice)? 
-> - 𝑃(𝑌=3) (or the soccer player scores exactly three times)?
-
-
-```python
-# Consider a soccer player has a 80% success rate in converting penalties.
-# Use numpy's binomial function to plot a binomial distribution 
-# of the number of goals scored over 10 tries across 100 trials.
-
-results = np.random.binomial(10, .8, size=100)
-plt.hist(results);
-```
-
-
-![png](index_files/index_83_0.png)
-
-
+The Binomial distribution describes the number of successess of a set of bernouli trials. For example, say we have an unfair coin with a probability of landing heads of .8, if we designated our number of trials as 3, our PMF and CDF would look like what we see below:
 ![](images/binomial.png)
 
+For the binomial our Expected Value and Variance can be calculated like so:
 - Expected Value
 > $E(X) = np$ <br>
 - Variance
 > $Var(X) = np(1-p)$<br>
 
-- If we want to see the probability of a certain number of successes, we use the pmf.
-> $pmf = {n \choose k}*p^k*(1-p)^{n-k}$
+If we want to see the probability of a certain number of successes, we use the pmf.
+$\Large f(x) = {n \choose k}p^k(1 - p)^{n - k}$
 
+Note: ${n\choose k} = \frac{n!}{k!(n - k)!}$, the number of ways of choosing $k$ objects from a total of $n$.
 
-# 4. Normal Distribution
+In our penalty kick example. Suppose we take for example a 10-kick penalty shoot after a extra time runs out.
 
-The last distribution we will cover today is the normal distribution. You probably recognize its distinctive bell curve.  It is the most important distribution for our purposes in this course and will reappear often in machine learning.
-
-![](images/normal.png)
+The binomial distribution can tell me what the probability is that the shootout will result in exactly exactly $k$ goals out of $n$ shots ($k < n$).
 
 
 ```python
-# suppose the average height of an American woman is 65 inches
-# with a standard deviation of 3.5 inches. 
-# Use numpy's random.normal to generate a sample of 1000 women
-# and plot the histogram of the sample.
+n = 10
+p = 0.75
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+x = np.arange(stats.binom.ppf(0.001, n, p),
+              stats.binom.ppf(.99, n, p)+1)
 
+ax.plot(x, stats.binom.pmf(x, n, p), 'bo', ms=8, label='binom pmf')
+ax.vlines(x, 0, stats.binom.pmf(x, n, p), 'r', linewidth=5,
+          label='pmf')
+ax.legend(loc='best');
 ```
 
 
-![png](index_files/index_89_0.png)
+![png](index_files/index_86_0.png)
+
+
+# Code along
+What is the probability of a team scoring 7 goals in a shootout?
+
+
+
+```python
+mccalister = ['Adam', 'Amanda','Chum', 'Dann', 
+ 'Jacob', 'Jason', 'Johnhoy', 'Karim', 
+'Leana','Luluva', 'Matt', 'Maximilian', ]
+np.random.seed(42)
+choice = np.random.choice(mccalister)
+print(choice)
+```
+
+    Johnhoy
+
+
+
+```python
+# Start
+n = None
+k = None
+p = None
+```
+
+# 4. Poisson Distribution
+
+The Poisson distribution describes the probability of a certain number of a specific event occuring over a given interval. We assume that these events occur at a constant rate and independently.
+
+Examples are:
+- number of visitors to a website over an hour
+- number of pieces of mail arriving at your door per day over a month
+- number of births in a hospital per day
+
+
+Shape of the Poisson Distribution is governed by the rate parameter lambda:
+
+$\Large\lambda = \frac{Avg\ number\ of\ events}{period\ of\ time}$
+
+${\displaystyle P(k)= {\frac {\lambda ^{k}e^{-\lambda }}{k!}}}$
+
+Consider the scenario where a website receives 200 hits per hour.
+
+The pmf of the Poisson distribution would be:
+
+
+
+```python
+rate = 40
+
+
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+x = np.arange(stats.poisson.ppf(0.1, rate),
+              stats.poisson.ppf(.99, rate))
+
+ax.plot(x, stats.poisson(rate).pmf(x), 'bo', ms=8, label='binom pmf')
+ax.vlines(x, 0, stats.poisson(rate).pmf(x), 'r', linewidth=5,
+          label='Poisson Distribution:\n Website Hits Over an Hour')
+ax.legend(loc='best');
+```
+
+
+![png](index_files/index_94_0.png)
+
+
+The Poisson distribution has a unique characteristic:
+    
+$\Large\mu = \sigma^2 = \lambda$
+
+# Round Robin 
+
+Northwestern Memorial is a very busy hospital.  The doctors there deliver, on average, 30 newborns per day.
+
+Assume that newborns arrive at a constant rate and independently.
+
+What is the probability of seeing exactly 40 newborns delivered on a given day.
+
+
+```python
+mccalister = ['Adam', 'Amanda','Chum', 'Dann', 
+ 'Jacob', 'Jason', 'Johnhoy', 'Karim', 
+'Leana','Luluva', 'Matt', 'Maximilian', ]
+```
+
+
+```python
+np.random.seed(42)
+new_choice = np.random.choice(mccalister)
+print(new_choice)
+mccalister.remove(new_choice)
+```
+
+    Jacob
+
+
+
+```python
+# Code here
+```
+
+# 4. Normal Distribution
+
+The normal distribution describes many phenomena. Think of anything that has a typical range:
+- human body temperatures
+- sizes of elephants
+- sizes of stars
+- populations of cities
+- IQ
+- Heart rate
+
+Among human beings, 98.6 degrees Fahrenheit is an _average_ body temperature. Many folks' temperatures won't measure _exactly_ 98.6 degrees, but most measurements will be _close_. It is much more common to have a body temperature close to 98.6 (whether slightly more or slightly less) than it is to have a body temperature far from 98.6 (whether significantly more or significantly less). This is a hallmark of a normally distributed variable.
+
+Similarly, there are large elephants and there are small elephants, but most elephants are near the average size.
+
+The normal distribution is _very_ common in nature (**Why?**) and will arise often in your work. Get to know it well!
+
+You will recognize it by its characteristic bell curve. 
+
+![normal_curve](images/IQ_normal.png)
+
+You may see the notation 
+
+$ N(μ,σ2)$
+
+where N signifies that the distribution is normal, μ is the mean, and σ2 is the variance. 
+
+
+The PDF of the normal curve equals:
+
+$\Large f(x) = \frac{1}{\sigma\sqrt{2\pi}}exp\left[\frac{-(x - \mu)^2}{2\sigma^2}\right]$
+
+
+
+```python
+
+fig, ax = plt.subplots()
+
+mu = 0
+sigma = 1
+z_curve = np.linspace(stats.norm(mu,sigma).ppf(0.01),
+             stats.norm(mu,sigma).ppf(0.99), 100)
+ax.plot(z_curve, stats.norm(mu,sigma).pdf(z_curve),
+     'r-', lw=5, alpha=0.6, label='z_curve')
+```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x1a1dcd6cf8>]
+
+
+
+
+![png](index_files/index_104_1.png)
 
 
 ![](images/normal_2.png)
 
-The standard normal distribution, or z curve, is centered around 0 with a standard deviation of 1.  
+# Quick Solo Challenge
+
+Turn off you cameras, turn them back on when you solved the problem, or when 1 minutes is up.
+
+suppose the average height of an American woman is 65 inches with a standard deviation of 3.5 inches. 
+Use numpy's random.normal to generate a sample of 1000 women and plot the histogram of the sample.
+
+
+
+```python
+# Code here
+```
+
+
+```python
+fig, ax = plt.subplots()
+ax.hist(np.random.normal(65, 3.5, 1000))
+ax.set_title('Distribution of Heights of American Women')
+ax.set_xlabel('Height in Inches');
+```
+
+
+![png](index_files/index_108_0.png)
+
+
+# Standard Normal Distribution
+
+A standard normal distribution has a mean of 0 and variance of 1. This is also known as a z distribution. 
+
+
+![norm_to_z](images/norm_to_z.png)
+
+
+```python
+# Let's transform the normal distribtion centered on 5 with a standard deviation of 2 into a z curve
+normal_dist = np.random.normal(5,2,1000)
+z_dist = [(x - np.mean(normal_dist))/np.std(normal_dist) 
+          for x in normal_dist]
+
+fig, ax = plt.subplots()
+sns.kdeplot(z_dist, ax=ax)
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a1ed264e0>
+
+
+
+
+![png](index_files/index_111_1.png)
+
 
 ![](images/empirical_rule.png)
 
 ## Empirical Rule
 > The empirical or 68–95–99.7 states that 68% of the values of a normal distribution of data lie within 1 standard deviation of the mean, 95% within 2 stds, and 99.7 within three.  
 > The empirical rule has countless applications in data science, which we will expand upon in the next few lectures.
+
+By calculating the z-score of an individual point, we can see how unlikely a value is.
+
+Consider, once again, the distribution of heights of American women, with a mean of 65 inches and a standard deviatio of 3.5 inches.
+
+Calculate the zscore of a height of 75inches. 
+
+Based on the empirical rule, if you were sampling heights of American women, speculate as to how improbable would that height be?
+
+
+```python
+# Your code here
+```
+
+# Exercise
+
+Z score can be used to eliminate outliers.
+
+For example, you may want to remove points that fall outside of 2.5 standard deviations of the mean.
+
+In the diabetes dataset, the boxplot of bmi shows three outliers.
+
+
+```python
+from sklearn.datasets import load_diabetes
+import pandas as pd
+
+data = load_diabetes()
+data.keys()
+df = pd.DataFrame(data['data'])
+df.columns = data['feature_names']
+
+sns.boxplot(df['bmi'])
+```
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a1df426d8>
+
+
+
+
+![png](index_files/index_119_1.png)
+
+
+Using `stats.zscore`,remove all values that fall outside of  2.5 standard deviations on either side of the mean.
+
+
+```python
+# Your code here
+```
 
 
 ```python
