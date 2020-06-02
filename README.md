@@ -234,7 +234,7 @@ The pmf of a discrete uniform distribution is simply:
 
 $ f(x)=\frac{1}{n} $
 
-Let's take the example of a twelve-sided die, and plot the PMF.  
+Let's take the example of a twelve-sided die.  
 
 The probability for rolling any number, is 1/12.
 
@@ -452,11 +452,10 @@ Common transformations of this data include
 
 #### Square root transformation:
 Applied to positive values only. Hence, observe the values of column before applying.
-Cube root transformation:
+
 
 #### The cube root transformation: 
 involves converting x to x^(1/3). This is a fairly strong transformation with a substantial effect on distribution shape: but is weaker than the logarithm. It can be applied to negative and zero values too. Negatively skewed data.
-Logarithm transformation:
 
 #### The logarithm:
 x to log base 10 of x, or x to log base e of x (ln x), or x to log base 2 of x, is a strong transformation and can be used to reduce right skewness.
@@ -471,15 +470,13 @@ Another method of handling skewness is finding outliers and possibly removing th
 
 Below, we have added some significant right skewed to the data by adding points between 2 and 4 standard deviations to to the right of the mean.
 
-Each group will apply a transformation mentioned about to the data, then report back the new skew.
+Apply each transformation mentioned above.
+Hint: The data is in an array.  You can then feed the array into numpy functions, or broadcast a calculation across all elements.
 
 
 ```python
-number_range = np.random.normal(10,1,1000)
-some_right_skew = np.arange(12,14,.01)
-right_skew = np.concatenate([number_range, some_right_skew])
-stats.skew(right_skew)
-
+import numpy as np
+from scipy import stats
 no_skew_dist = np.random.normal(10,1, 1000)
 add_right_skew = np.random.choice(np.random.normal(12,1,1000) , 100)
 right_skewed_data = np.concatenate([no_skew_dist, add_right_skew])
@@ -492,14 +489,14 @@ print(f'Left Skew {stats.skew(left_skewed_data)}')
 stats.skew(left_skewed_data)
 ```
 
-    Right Skew 0.45956059419444484
-    Left Skew -0.38180327187107577
+    Right Skew 0.2878890743706462
+    Left Skew -0.398050618316759
 
 
 
 
 
-    -0.38180327187107577
+    -0.398050618316759
 
 
 
