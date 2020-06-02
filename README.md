@@ -204,7 +204,7 @@ The pmf of a discrete uniform distribution is simply:
 
 $ f(x)=\frac{1}{n} $
 
-Let's take the example of a twelve-sided die, and plot the PMF.  
+Let's take the example of a twelve-sided die.  
 
 The probability for rolling any number, is 1/12.
 
@@ -318,11 +318,10 @@ Common transformations of this data include
 
 #### Square root transformation:
 Applied to positive values only. Hence, observe the values of column before applying.
-Cube root transformation:
+
 
 #### The cube root transformation: 
 involves converting x to x^(1/3). This is a fairly strong transformation with a substantial effect on distribution shape: but is weaker than the logarithm. It can be applied to negative and zero values too. Negatively skewed data.
-Logarithm transformation:
 
 #### The logarithm:
 x to log base 10 of x, or x to log base e of x (ln x), or x to log base 2 of x, is a strong transformation and can be used to reduce right skewness.
@@ -337,7 +336,8 @@ Another method of handling skewness is finding outliers and possibly removing th
 
 Below, we have added some significant right skewed to the data by adding points between 2 and 4 standard deviations to to the right of the mean.
 
-Each group will apply a transformation mentioned about to the data, then report back the new skew.
+Apply each transformation mentioned above.
+Hint: The data is in an array.  You can then feed the array into numpy functions, or broadcast a calculation across all elements.
 
 
 ```python
